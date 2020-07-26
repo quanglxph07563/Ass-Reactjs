@@ -1,9 +1,11 @@
 import React, { useState, useEffect  } from "react";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import {
     useParams
   } from "react-router-dom";
 const EditProduct = () => {
+  const { register, handleSubmit, watch, errors } = useForm();
     let { id } = useParams();
     const [detail, setDeatil] = useState({});
     
@@ -18,7 +20,6 @@ const EditProduct = () => {
     }
       useEffect(setList, []);
   const capNhatSanPham = (event) => {
-
     event.preventDefault();
     let data = detail;
     axios
@@ -42,17 +43,19 @@ const EditProduct = () => {
   };
 
   return (
-    <form method='POST' onSubmit={capNhatSanPham}>
+    <form method='POST' onSubmit={handleSubmit(capNhatSanPham)}>
     <div className="row">
       <div className="col-md-6">
         <div className="form-group">
           <label htmlFor="exampleFormControlSelect1">Danh mục</label>
-          <input type="text" onChange={onHandleChange} className="form-control" value ={detail.idCategory} name="idCategory" />
+          <input type="number" min={0}  onChange={onHandleChange} ref={register({ required: true })} className="form-control" value ={detail.idCategory} name="idCategory" />
+          {errors.idCategory && <span className="loi">Danh mục không được để trống</span>}
         </div>
         <div className="form-group">
           <label htmlFor="exampleInputEmail1">Tên Sản Phẩm</label>
-          <input type="text" onChange={onHandleChange} className="form-control"  value ={detail.name_product} name="name_product" />
-          <span className="error" style={{ color: "red" }} />
+          <input type="text" onChange={onHandleChange} className="form-control" ref={register({ required: true })}  value ={detail.name_product} name="name_product" />
+          {errors.name_product && <span className="loi">Tên sản phẩm không được để trống</span>}
+
         </div>
         <div className="form-group">
           <label htmlFor="exampleInputPassword1"> Ảnh Sản Phẩm</label>
@@ -62,20 +65,25 @@ const EditProduct = () => {
             className="form-control"
             id="images"
             name="images"
+            // ref={register({ required: true })}
           />
+          {/* {errors.images && <span className="loi">Ảnh không được để trống</span>} */}
+
           <span className="error" style={{ color: "red" }} />
         </div>
         <div className="form-group">
           <label htmlFor="exampleInputPassword1">Giá Tiền</label>
-          <input type="number" min={0}  onChange={onHandleChange} value ={detail.price} className="form-control" name="price" />
-          <span className="error" style={{ color: "red" }} />
+          <input type="number" ref={register({ required: true })} min={0}  onChange={onHandleChange} value ={detail.price} className="form-control" name="price" />
+          {errors.price && <span className="loi">Giá Tiền không được để trống</span>}
+          
         </div>
       </div>
       <div className="col-md-6">
         <div className="form-group">
-          <label htmlFor="exampleInputPassword1">Số Lượng</label>
-          <input type="number" onChange={onHandleChange} className="form-control" value ={detail.amount} name="amount" />
-          <span className="error" style={{ color: "red" }} />
+          <label htmlFor="exampleInputPassword1"></label>
+          <input type="number" ref={register({ required: true })} onChange={onHandleChange} className="form-control" value ={detail.amount} name="amount" />
+          {errors.amount && <span className="loi">Số Lượng không được để trống</span>}
+  
         </div>
         <div className="form-group">
           <label htmlFor="exampleFormControlTextarea1">
@@ -88,14 +96,15 @@ const EditProduct = () => {
             defaultValue={""}
             value ={detail.detail}
             onChange={onHandleChange}
+            ref={register({ required: true })}
           />
-          <span className="error" style={{ color: "red" }} />
+                  {errors.detail && <span className="loi"> Chi tiết sản phẩm không được để trống</span>}
+
         </div>
       </div>
       <div className="d-flex justify-content-end">
         <button
           type="submit"
-          // onClick={() => addSanPham()}
           class="btn btn-primary"
         >
          Cập nhật sản phẩm
