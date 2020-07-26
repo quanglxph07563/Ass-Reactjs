@@ -3,13 +3,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import LayoutAdmin from '../pages/layouts/LayoutAdmin'
 import LayoutClinet from '../pages/layouts/LayoutClinet';
 import TrangChu from '../pages/views/Client/TrangChu';
-// //Admin
-// import Dashboard from '../pages/views/Admin/Dashboard'
-// import ProductsManager from '../pages/views/Admin/Products'
+import ShowProducts from '../pages/views/Admin/Products/ShowProduct';
+import AddProduct from '../pages/views/Admin/Products/AddProduct';
+import EditProduct from '../pages/views/Admin/Products/EditProduct';
 
-// //Views
-// import About from '../pages/views/Main/About'
-// import Home from '../pages/views/Main/Home'
 
 
 const Routers = () => {
@@ -22,8 +19,14 @@ const Routers = () => {
                             <Route path='/admin' exact>
                                 {/* <Dashboard /> */}
                             </Route>
-                            <Route path='/admin/products'>
-                                {/* <ProductsManager products={products} onRemove={onHandleRemove} /> */}
+                            <Route path='/admin/products' exact>
+                               <ShowProducts/>
+                            </Route>
+                            <Route path='/admin/add-product' exact>
+                              <AddProduct/>
+                            </Route>
+                            <Route path='/admin/:id' exact>
+                              <EditProduct/>
                             </Route>
                         </Switch>
                     </LayoutAdmin>
