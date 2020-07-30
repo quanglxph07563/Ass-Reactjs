@@ -5,8 +5,9 @@ import Slide from '../../../components/Client/Slide/Slide'
 function TrangChu() {
     return (
       <div>
-      <ChuongTrinh/>
       <Slide/>
+      <ChuongTrinh/>
+
         <div className="single-product-area">
         <div className="zigzag-bottom" />
         <div className="container">

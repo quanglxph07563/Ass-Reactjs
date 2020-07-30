@@ -11,6 +11,7 @@ const ShowProducts = ({addFormData}) => {
       .get("http://127.0.0.1:8000/api/products/")
       .then(function (response) {
         setItems(response.data.data);
+        console.log(items)
       })
       .catch(function (error) {
         console.log(error);
@@ -29,20 +30,6 @@ const ShowProducts = ({addFormData}) => {
         console.log(error);
       });
   };
-
-  const getValue= (event)=>{
-    const {name,value} = event.target
-    setItemsForm({
-      ...itemsForm,[name]:value
-    })
-    // console.log(target.value)
-  }
-
-  const onSubmitData =(event) =>{
-    event.preventDefault();
-    addFormData(itemsForm)
-
-  }
 
   return (
     <div className="table-responsive">
@@ -70,7 +57,7 @@ const ShowProducts = ({addFormData}) => {
             <tr key={index}>
               <th scope="row">{++index}</th>
               <td>{product.name_product}</td>
-              <td>{product.images}</td>
+              <td> <img style={{width: '200px'}} src = {product.images} alt="" /></td>
               <td>{product.price}</td>
               <td>{product.amount}</td>
               <td>{product.idCategory}</td>
@@ -91,7 +78,7 @@ const ShowProducts = ({addFormData}) => {
                 {/* <button href='12' type="button" className="btn btn-success">
                   Sửa
                 </button> */}
-                <Link to={`${product.id}`}>   <button  type="button" className="btn btn-success">
+                <Link to={`edit-products/${product.id}`}>   <button  type="button" className="btn btn-success">
                   Sửa
                 </button> </Link>
 

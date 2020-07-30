@@ -1,5 +1,7 @@
 import React from "react";
 import imagePath from '../../../styleClient/img/logo.png';
+import { Link } from "react-router-dom";
+
 function Header() {
   return (
     <div>
@@ -54,10 +56,10 @@ function Header() {
             </div>
             <div className="col-sm-6">
               <div className="shopping-item">
-                <a href="cart.html">
+              <Link to={'/cart'}> 
                   Cart <i className="fa fa-shopping-cart" />{" "}
                   <span className="product-count">0</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

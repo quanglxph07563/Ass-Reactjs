@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom";
 
 function Menu() {
     return (
@@ -7,10 +8,13 @@ function Menu() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item active">
-              <a className="nav-link" href="#">Trang chủ <span className="sr-only">(current)</span></a>
+              <Link className="nav-link" to="/">Trang chủ <span className="sr-only">(current)</span></Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">Cửa hàng</a>
+            <Link className="nav-link" to="/cua-hang">Cửa hàng <span className="sr-only">(current)</span></Link> 
+            </li>
+            <li className="nav-item">
+            <Link className="nav-link" to="/lien-he">Liên hệ <span className="sr-only">(current)</span></Link> 
             </li>
           </ul>
         </div>
