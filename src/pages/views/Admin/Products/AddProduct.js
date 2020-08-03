@@ -46,119 +46,135 @@ const AddProduct = () => {
   return (
     <form method="POST" onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
-        <div className="col-md-6">
-          <div className="form-group">
-            <label htmlFor="exampleFormControlSelect1">Danh mục</label>
-            <select
-              name="idCategory"
-              ref={register({ required: true })}
-              className="custom-select"
-              id="inputGroupSelect01"
-            >
-              <option value='' selected>Choose...</option>
-              {category.map((item, index) => (
-                <option
-                value ={item.id}>{item.name_category}</option>
-                 ))}
-            </select>
-            {errors.idCategory && (
-              <span className="loi">Danh mục không được để trống</span>
-            )}
-          </div>
-          <div className="form-group">
-            <label htmlFor="exampleInputEmail1">Tên Sản Phẩm</label>
-            <input
-              type="text"
-              ref={register({ required: true, minLength: 10, maxLength: 60 })}
-              className="form-control"
-              name="name_product"
-            />
-            <span className="loi">
-              {errors.name_product?.type === "required" &&
-                "Tên sản phẩm không được để trống"}
-              {errors.name_product?.type === "minLength" &&
-                "Tên sản phẩm không được nhỏ hơn 10 ký tự"}
-              {errors.name_product?.type === "maxLength" &&
-                "Tên sản phẩm không được lớn hơn 60 ký tự"}
-            </span>
-          </div>
-          <div className="form-group">
-            <label htmlFor="exampleInputPassword1"> Ảnh Sản Phẩm</label>
-            <input
-              type="file"
-              onChange={loadImageFileAsURL}
-              className="form-control"
-              id="images"
-              name="images"
-              ref={register({ required: true })}
-            />
-            <span className="loi">
-              {errors.images?.type === "required" && "Chọn ảnh sản phẩm"}
-            </span>
-            <div id="show_images">
-              <img src alt="" />
+        <div className="col-lg-12">
+          <div className="card position-relative">
+            <div className="card-header py-3">
+              <h6 className="m-0 font-weight-bold text-primary">
+                Thêm mới sản phẩm
+              </h6>
+            </div>
+            <div className="card-body row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="exampleFormControlSelect1">Danh mục</label>
+                  <select
+                    name="idCategory"
+                    ref={register({ required: true })}
+                    className="custom-select"
+                    id="inputGroupSelect01"
+                  >
+                    <option value="" selected>
+                      Choose...
+                    </option>
+                    {category.map((item, index) => (
+                      <option value={item.id}>{item.name_category}</option>
+                    ))}
+                  </select>
+                  {errors.idCategory && (
+                    <span className="loi">Danh mục không được để trống</span>
+                  )}
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputEmail1">Tên Sản Phẩm</label>
+                  <input
+                    type="text"
+                    ref={register({
+                      required: true,
+                      minLength: 10,
+                      maxLength: 60,
+                    })}
+                    className="form-control"
+                    name="name_product"
+                  />
+                  <span className="loi">
+                    {errors.name_product?.type === "required" &&
+                      "Tên sản phẩm không được để trống"}
+                    {errors.name_product?.type === "minLength" &&
+                      "Tên sản phẩm không được nhỏ hơn 10 ký tự"}
+                    {errors.name_product?.type === "maxLength" &&
+                      "Tên sản phẩm không được lớn hơn 60 ký tự"}
+                  </span>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1"> Ảnh Sản Phẩm</label>
+                  <input
+                    type="file"
+                    onChange={loadImageFileAsURL}
+                    className="form-control"
+                    id="images"
+                    name="images"
+                    ref={register({ required: true })}
+                  />
+                  <span className="loi">
+                    {errors.images?.type === "required" && "Chọn ảnh sản phẩm"}
+                  </span>
+                  <div id="show_images" className='pt-3'>
+                    <img style={{width: '200px'}} src alt="" />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1">Giá Tiền</label>
+                  <input
+                    type="number"
+                    ref={register({ required: true, min: 0 })}
+                    className="form-control"
+                    name="price"
+                  />
+                  {/* {errors.price && <span className="loi">Giá Tiền không được để trống và k được lớn hơn 3</span>} */}
+                  <span className="loi">
+                    {errors.price?.type === "required" &&
+                      "Giá sản phẩm không dược để trống"}
+                    {errors.price?.type === "min" &&
+                      "Giá sản phẩm không được lớn hơn 0 "}
+                  </span>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1">Số Lượng</label>
+                  <input
+                    type="number"
+                    ref={register({ required: true, min: 0 })}
+                    className="form-control"
+                    name="amount"
+                  />
+                  <span className="loi">
+                    {errors.amount?.type === "required" &&
+                      "Số lượng sản phẩm không dược để trống"}
+                    {errors.amount?.type === "min" &&
+                      "Số lượng sản phẩm không được lớn hơn 0 "}
+                  </span>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="exampleFormControlTextarea1">
+                    Chi tiết sản phẩm
+                  </label>
+                  <textarea
+                    className="form-control"
+                    name="detail"
+                    rows={5}
+                    defaultValue={""}
+                    ref={register({ required: true })}
+                  />
+                  {errors.detail && (
+                    <span className="loi">
+                      {" "}
+                      Chi tiết sản phẩm không được để trống
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="d-flex justify-content-end">
+                <button
+                  type="submit"
+                  // onClick={() => addSanPham()}
+                  class="btn btn-primary"
+                >
+                  Thêm mới sản phẩm
+                </button>
+              </div>
             </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="exampleInputPassword1">Giá Tiền</label>
-            <input
-              type="number"
-              ref={register({ required: true, min: 0 })}
-              className="form-control"
-              name="price"
-            />
-            {/* {errors.price && <span className="loi">Giá Tiền không được để trống và k được lớn hơn 3</span>} */}
-            <span className="loi">
-              {errors.price?.type === "required" &&
-                "Giá sản phẩm không dược để trống"}
-              {errors.price?.type === "min" &&
-                "Giá sản phẩm không được lớn hơn 0 "}
-            </span>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="form-group">
-            <label htmlFor="exampleInputPassword1">Số Lượng</label>
-            <input
-              type="number"
-              ref={register({ required: true, min: 0 })}
-              className="form-control"
-              name="amount"
-            />
-            <span className="loi">
-              {errors.amount?.type === "required" &&
-                "Số lượng sản phẩm không dược để trống"}
-              {errors.amount?.type === "min" &&
-                "Số lượng sản phẩm không được lớn hơn 0 "}
-            </span>
-          </div>
-          <div className="form-group">
-            <label htmlFor="exampleFormControlTextarea1">
-              Chi tiết sản phẩm
-            </label>
-            <textarea
-              className="form-control"
-              name="detail"
-              rows={5}
-              defaultValue={""}
-              ref={register({ required: true })}
-            />
-            {errors.detail && (
-              <span className="loi">
-                {" "}
-                Chi tiết sản phẩm không được để trống
-              </span>
-            )}
-          </div>
-        </div>
-        <div className="d-flex justify-content-end">
-          <button
-            type="submit"
-            // onClick={() => addSanPham()}
-            class="btn btn-primary"
-          >
-            Thêm mới sản phẩm
-          </button>
         </div>
       </div>
     </form>

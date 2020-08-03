@@ -13,6 +13,9 @@ import CuaHang from '../pages/views/Client/CuaHang';
 import ChiTietSanPham from '../pages/views/Client/ChiTietSanPham';
 import LienHe from '../pages/views/Client/LienHe';
 import DashBoard from '../pages/views/Admin/DashBoard/DashBoard';
+import AddCategory from '../pages/views/Admin/Category/AddCategory';
+import ShowCategory from '../pages/views/Admin/Category/ShowCategory';
+import EditCategory from '../pages/views/Admin/Category/EditCategory';
 
 const Routers = () => {
     return (
@@ -32,6 +35,16 @@ const Routers = () => {
                             </Route>
                             <Route path='/admin/edit-products/:id' exact>
                               <EditProduct/>
+                            </Route>
+
+                            <Route path='/admin/category' exact>
+                           <ShowCategory/>
+                            </Route>
+                            <Route path='/admin/add-category' exact>
+                              <AddCategory/>
+                            </Route>
+                            <Route path='/admin/edit-category/:id' exact>
+                              <EditCategory/>
                             </Route>
                         </Switch>
                     </LayoutAdmin>

@@ -85,6 +85,22 @@ function CuaHang() {
     function financial(price) {
       return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
     }
+
+    const searchKey =(e)=>{
+      var key = e.target.value
+      if (!key) {
+          key = 'trong'
+      }
+      console.log(key)
+        axios
+          .get("http://127.0.0.1:8000/api/products/search/"+key)
+          .then(function (response) {
+            setItems(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
   return (
     <div>
       
@@ -120,6 +136,7 @@ function CuaHang() {
                 id="searchsp"
                 aria-describedby="emailHelp"
                 placeholder="Tìm kiếm"
+                onChange = {searchKey}
               />
             </div>
           </div>

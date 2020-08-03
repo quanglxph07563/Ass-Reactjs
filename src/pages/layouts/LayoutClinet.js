@@ -5,7 +5,7 @@ import Menu from "../../components/Client/Menu/Menu";
 
 import '../../styleClient/css/owl.carousel.css'
 import '../../styleClient/css/responsive.css'
-import '../../styleClient/css/style.css'
+import '../../styleClient/css/style.scss'
 import '../../styleClient/css/font-awesome.min.css'
 
 function LayoutClinet({children}) {
@@ -25,7 +25,7 @@ function LayoutClinet({children}) {
       getCountCart()
     }
   return (
-    <div>
+    <div id='clinet'>
       <Header />
       <Menu/>
       {children}

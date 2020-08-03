@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import swal from 'sweetalert';
 
 const ShowProducts = ({addFormData}) => {
   const [items, setItems] = useState([]);
@@ -25,6 +26,12 @@ const ShowProducts = ({addFormData}) => {
       .delete("http://127.0.0.1:8000/api/products/" + id)
       .then(function (response) {
         setList();
+        swal({
+          title: "Xóa phẩm thành công!",
+          text: "You clicked the button!",
+          icon: "success",
+          button: "Đóng!",
+          });
       })
       .catch(function (error) {
         console.log(error);
