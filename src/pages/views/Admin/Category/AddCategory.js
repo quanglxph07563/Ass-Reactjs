@@ -14,7 +14,7 @@ const { register, handleSubmit, watch, errors } = useForm();
         history.push("/admin/category");
       })
       .catch(function (error) {
-        console.log(error);
+        document.getElementById('trung_ten').innerHTML = error.response.data.errors.name_category
       });
   };
   const loadImageFileAsURL = (e) => {
@@ -48,17 +48,17 @@ const { register, handleSubmit, watch, errors } = useForm();
                       type="text"
                       ref={register({
                         required: true,
-                        minLength: 10,
+                        minLength: 2,
                         maxLength: 60,
                       })}
                       className="form-control"
                       name="name_category"
                     />
-                    <span className="loi">
+                    <span className="loi" id='trung_ten'>
                       {errors.name_category?.type === "required" &&
                         "Tên danh mục không được để trống"}
                       {errors.name_category?.type === "minLength" &&
-                        "Tên danh mục không được nhỏ hơn 10 ký tự"}
+                        "Tên danh mục không được nhỏ hơn 2 ký tự"}
                       {errors.name_category?.type === "maxLength" &&
                         "Tên danh mục không được lớn hơn 60 ký tự"}
                     </span>
@@ -73,7 +73,7 @@ const { register, handleSubmit, watch, errors } = useForm();
                     name="images"
                     ref={register({ required: true })}
                   />
-                  <span className="loi">
+                  <span className="loi" >
                     {errors.images?.type === "required" && "Chọn ảnh danh mục"}
                   </span>
                   <div id="show_images" className='pt-3'>

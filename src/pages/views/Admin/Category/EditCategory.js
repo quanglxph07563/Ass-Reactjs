@@ -76,7 +76,7 @@ function EditCategory() {
                       type="text"
                       ref={register({
                         required: true,
-                        minLength: 10,
+                        minLength: 2,
                         maxLength: 60,
                       })}
                       onChange={onHandleChange}
@@ -88,7 +88,7 @@ function EditCategory() {
                       {errors.name_category?.type === "required" &&
                         "Tên danh mục không được để trống"}
                       {errors.name_category?.type === "minLength" &&
-                        "Tên danh mục không được nhỏ hơn 10 ký tự"}
+                        "Tên danh mục không được nhỏ hơn 2 ký tự"}
                       {errors.name_category?.type === "maxLength" &&
                         "Tên danh mục không được lớn hơn 60 ký tự"}
                     </span>

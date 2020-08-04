@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 function ChiTietSanPham() {
   let { id } = useParams();
   const [detail, setDeatil] = useState({});
@@ -35,7 +35,7 @@ function ChiTietSanPham() {
                   <div className="stars"> <span className="fa fa-star checked" /> <span className="fa fa-star checked" /> <span className="fa fa-star checked" /> <span className="fa fa-star" /> <span className="fa fa-star" /> 
                   </div> <span className="review-no">123 đánh giá</span> 
                 </div> 
-  <p className="product-description">{detail.detail}</p> 
+  <p className="product-description">{ReactHtmlParser(detail.detail)}</p> 
                 <h4 className="price">Giá bán: {detail.price} đ</h4> 
                 <p className="vote"><strong>91%</strong> of người mua hài lòng với sản phẩm này <strong>(87 bình chọn)</strong>
                 </p> 

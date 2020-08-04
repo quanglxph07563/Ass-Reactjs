@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 const AddProduct = () => {
   let history = useHistory();
   const { register, handleSubmit, watch, errors } = useForm();
   const [category, setCategory] = useState([]);
+  const [detail, setDetail] = useState();
 
   const onSubmit = (data) => {
     data.images = document.querySelector("#show_images img").src;
+    data.detail = detail;
     axios
       .post("http://127.0.0.1:8000/api/products/", data)
       .then(function (response) {
@@ -20,9 +24,9 @@ const AddProduct = () => {
   };
   const getcategory = () => {
     axios
-      .get("http://127.0.0.1:8000/api/category")
+      .get("http://127.0.0.1:8000/api/get-all-category")
       .then(function (response) {
-        setCategory(response.data.data);
+        setCategory(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -63,7 +67,7 @@ const AddProduct = () => {
                     className="custom-select"
                     id="inputGroupSelect01"
                   >
-                    <option value="" selected>
+                    <option value={0} selected>
                       Choose...
                     </option>
                     {category.map((item, index) => (
@@ -108,8 +112,8 @@ const AddProduct = () => {
                   <span className="loi">
                     {errors.images?.type === "required" && "Chọn ảnh sản phẩm"}
                   </span>
-                  <div id="show_images" className='pt-3'>
-                    <img style={{width: '200px'}} src alt="" />
+                  <div id="show_images" className="pt-3">
+                    <img style={{ width: "200px" }} src alt="" />
                   </div>
                 </div>
                 <div className="form-group">
@@ -120,7 +124,6 @@ const AddProduct = () => {
                     className="form-control"
                     name="price"
                   />
-                  {/* {errors.price && <span className="loi">Giá Tiền không được để trống và k được lớn hơn 3</span>} */}
                   <span className="loi">
                     {errors.price?.type === "required" &&
                       "Giá sản phẩm không dược để trống"}
@@ -130,6 +133,22 @@ const AddProduct = () => {
                 </div>
               </div>
               <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="exampleInputPassword1">Sale</label>
+                  <input
+                    type="number"
+                    ref={register({ required: true, min: 0 })}
+                    className="form-control"
+                    name="sale"
+                  />
+                  {/* {errors.price && <span className="loi">Giá Tiền không được để trống và k được lớn hơn 3</span>} */}
+                  <span className="loi">
+                    {errors.price?.type === "required" &&
+                      "Sale phẩm không dược để trống"}
+                    {errors.price?.type === "min" &&
+                      "Sale sản phẩm không được lớn hơn 0 "}
+                  </span>
+                </div>
                 <div className="form-group">
                   <label htmlFor="exampleInputPassword1">Số Lượng</label>
                   <input
@@ -145,24 +164,15 @@ const AddProduct = () => {
                       "Số lượng sản phẩm không được lớn hơn 0 "}
                   </span>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
-                    Chi tiết sản phẩm
-                  </label>
-                  <textarea
-                    className="form-control"
-                    name="detail"
-                    rows={5}
-                    defaultValue={""}
-                    ref={register({ required: true })}
-                  />
-                  {errors.detail && (
-                    <span className="loi">
-                      {" "}
-                      Chi tiết sản phẩm không được để trống
-                    </span>
-                  )}
-                </div>
+                <CKEditor
+                  editor={ClassicEditor}
+                  data=""
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                    setDetail(data);
+                    // console.log( { event, editor, data } );
+                  }}
+                />
               </div>
               <div className="d-flex justify-content-end">
                 <button

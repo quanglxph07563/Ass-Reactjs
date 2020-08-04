@@ -1,8 +1,155 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import swal from "sweetalert";
 import ChuongTrinh from "../../../components/Client/ChuongTrinh/ChuongTrinh";
 import Slide from "../../../components/Client/Slide/Slide";
 
 function TrangChu() {
+  const [category, setCategory] = useState([]);
+  const [product, setProduct] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalpage, setTotalpage] = useState(1);
+  const [searchCategory, setSearchCategory] = useState(-1);
+
+  const [menuItemsShow, setmenuItems] = useState([]);
+  var stt = 3 * (page - 1) + 1;
+  const setList = () => {
+    axios
+      .get("http://127.0.0.1:8000/api/get-all-category")
+      .then(function (response) {
+        setCategory(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  useEffect(setList, []);
+  const getProduct = () => {
+    axios
+      .get(
+        "http://127.0.0.1:8000/api/products/get-product-client/" +
+          searchCategory +
+          `?page=${page}`
+      )
+      .then(function (response) {
+        setProduct(response.data.data);
+        setTotalpage(response.data.last_page);
+        pagination(response.data.last_page);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  console.log(searchCategory);
+  useEffect(getProduct, [searchCategory, page]);
+  let menuItems = [];
+
+  const chuyenPage = (e) => {
+    setPage(Number(e.target.getAttribute("page")));
+  };
+  const pagination = (totalpage) => {
+    console.log(totalpage);
+    for (let index = 1; index < totalpage + 1; index++) {
+      if (page == index) {
+        menuItems.push(
+          <li className="page-item active">
+            <a
+              className="page-link"
+              style={{ color: "black" }}
+              page={index}
+              onClick={chuyenPage}
+            >
+              {index}
+            </a>
+          </li>
+        );
+      } else {
+        menuItems.push(
+          <li className="page-item">
+            <a
+              className="page-link"
+              style={{ color: "black" }}
+              page={index}
+              onClick={chuyenPage}
+            >
+              {index}
+            </a>
+          </li>
+        );
+      }
+    }
+    setmenuItems([menuItems]);
+  };
+
+  const addCart = (e) => {
+    var sl = 1;
+    var dataSp = e.target;
+    console.log(dataSp);
+    var getCart = localStorage.getItem("cart");
+    var sanpham = {
+      id: dataSp.getAttribute("data-product-id"),
+      sl: parseInt(dataSp.getAttribute("data-quantity")),
+    };
+    console.log(typeof sanpham.sl);
+    if (getCart != null) {
+      var bien = true;
+      var listsp = JSON.parse(getCart);
+      listsp.forEach((elements) => {
+        if (sanpham.id == elements.id) {
+          elements.sl += sl;
+          bien = false;
+        }
+      });
+      if (bien) {
+        listsp.push(sanpham);
+      }
+      var sonlistsp = JSON.stringify(listsp);
+      console.log(sonlistsp);
+      localStorage.setItem("cart", sonlistsp);
+      swal({
+        title: "Thêm sản phẩm thành công!",
+        text: "You clicked the button!",
+        icon: "success",
+        button: "Đóng !",
+      });
+      getCountCart();
+    } else {
+      var listsp = [];
+      listsp.push(sanpham);
+      var jsonlistsp = JSON.stringify(listsp);
+      localStorage.setItem("cart", jsonlistsp);
+      swal({
+        title: "Thêm sản phẩm thành công!",
+        text: "You clicked the button!",
+        icon: "success",
+        button: "Đóng!",
+      });
+      getCountCart();
+    }
+  };
+  const getCountCart = () => {
+    var getCart = localStorage.getItem("cart");
+    var listsp = JSON.parse(getCart);
+    var totalsp = 0;
+    console.log(listsp);
+    if (listsp != null) {
+      listsp.forEach((elements) => {
+        totalsp += elements.sl;
+      });
+    }
+
+    document.querySelector(".product-count").innerHTML = totalsp;
+  };
+  window.onload = function () {
+    getCountCart();
+  };
+  function financial(price) {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+  }
   return (
     <div>
       <Slide />
@@ -21,177 +168,31 @@ function TrangChu() {
                     <div className="panel-heading">
                       <h4 className="panel-title">
                         <a
-                          data-toggle="collapse"
-                          data-parent="#accordian"
-                          href="#sportswear"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setSearchCategory(-1)}
                         >
-                          <span className="badge pull-right">
-                            <i className="fa fa-plus" />
-                          </span>
-                          Sportswear
+                          Tất cả sản phẩm
                         </a>
                       </h4>
                     </div>
-                    <div id="sportswear" className="panel-collapse collapse">
-                      <div className="panel-body">
-                        <ul>
-                          <li>
-                            <a href="#">Nike </a>
-                          </li>
-                          <li>
-                            <a href="#">Under Armour </a>
-                          </li>
-                          <li>
-                            <a href="#">Adidas </a>
-                          </li>
-                          <li>
-                            <a href="#">Puma</a>
-                          </li>
-                          <li>
-                            <a href="#">ASICS </a>
-                          </li>
-                        </ul>
+                  </div>
+                  {category.map((element, index) => (
+                    <div className="panel panel-default">
+                      <div className="panel-heading">
+                        <h4 className="panel-title">
+                          <a
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setSearchCategory(element.id)
+                              setPage(1)}
+                            }
+                          >
+                            {element.name_category}
+                          </a>
+                        </h4>
                       </div>
                     </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a
-                          data-toggle="collapse"
-                          data-parent="#accordian"
-                          href="#mens"
-                        >
-                          <span className="badge pull-right">
-                            <i className="fa fa-plus" />
-                          </span>
-                          Mens
-                        </a>
-                      </h4>
-                    </div>
-                    <div id="mens" className="panel-collapse collapse">
-                      <div className="panel-body">
-                        <ul>
-                          <li>
-                            <a href="#">Fendi</a>
-                          </li>
-                          <li>
-                            <a href="#">Guess</a>
-                          </li>
-                          <li>
-                            <a href="#">Valentino</a>
-                          </li>
-                          <li>
-                            <a href="#">Dior</a>
-                          </li>
-                          <li>
-                            <a href="#">Versace</a>
-                          </li>
-                          <li>
-                            <a href="#">Armani</a>
-                          </li>
-                          <li>
-                            <a href="#">Prada</a>
-                          </li>
-                          <li>
-                            <a href="#">Dolce and Gabbana</a>
-                          </li>
-                          <li>
-                            <a href="#">Chanel</a>
-                          </li>
-                          <li>
-                            <a href="#">Gucci</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a
-                          data-toggle="collapse"
-                          data-parent="#accordian"
-                          href="#womens"
-                        >
-                          <span className="badge pull-right">
-                            <i className="fa fa-plus" />
-                          </span>
-                          Womens
-                        </a>
-                      </h4>
-                    </div>
-                    <div id="womens" className="panel-collapse collapse">
-                      <div className="panel-body">
-                        <ul>
-                          <li>
-                            <a href="#">Fendi</a>
-                          </li>
-                          <li>
-                            <a href="#">Guess</a>
-                          </li>
-                          <li>
-                            <a href="#">Valentino</a>
-                          </li>
-                          <li>
-                            <a href="#">Dior</a>
-                          </li>
-                          <li>
-                            <a href="#">Versace</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a href="#">Kids</a>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a href="#">Fashion</a>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a href="#">Households</a>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a href="#">Interiors</a>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a href="#">Clothing</a>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a href="#">Bags</a>
-                      </h4>
-                    </div>
-                  </div>
-                  <div className="panel panel-default">
-                    <div className="panel-heading">
-                      <h4 className="panel-title">
-                        <a href="#">Shoes</a>
-                      </h4>
-                    </div>
-                  </div>
+                  ))}
                 </div>
                 {/*/category-products*/}
               </div>
@@ -199,318 +200,81 @@ function TrangChu() {
             <div className="col-md-9">
               <h2 class="title text-center">Danh sách sản phẩm</h2>
               <div className="row">
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
+                {product.map((element, index) => (
+                  <div className="col-sm-3">
+                    <div className="product-image-wrapper">
+                      <div className="single-products">
+                        <div className="productinfo text-center">
+                          <div style={{ height: "200px" }}>
+                            <img src={element.images} alt="" />
+                          </div>
+                          <h2>{financial(element.price)}</h2>
+                          <p style={{ height: "50px" }}>
+                            {element.name_product}
+                          </p>
+                          <button 
+                           data-quantity={1}
+                           data-product_sku
+                           data-product-id={element.id}
+                           rel="nofollow"
+                           onClick={addCart}
+                          className="btn btn-default add-to-cart">
+                            <i className="fa fa-shopping-cart" />
+                            Add to cart
+                          </button>
+                        </div>
+                      </div>
+                      <div className="choose">
+                        <ul className="nav nav-pills nav-justified">
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-plus-square" />
+                              Add to wishlist
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-plus-square" />
+                              Add to compare
+                            </a>
+                          </li>
+                        </ul>
                       </div>
                     </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
                   </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-4">
-                  <div className="product-image-wrapper">
-                    <div className="single-products">
-                      <div className="productinfo text-center">
-                        <img src="https://cdn.tgdd.vn/Products/Images/42/222596/oppo-reno4-thumb-blue-400x400.jpg" alt="" />
-                        <h2>$56</h2>
-                        <p>Easy Polo Black Edition</p>
-                        <a href="#" className="btn btn-default add-to-cart">
-                          <i className="fa fa-shopping-cart" />
-                          Add to cart
-                        </a>
-                      </div>
-                    </div>
-                    <div className="choose">
-                      <ul className="nav nav-pills nav-justified">
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to wishlist
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#">
-                            <i className="fa fa-plus-square" />
-                            Add to compare
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
+              <div className="d-flex justify-content-center col-md-12">
+              <nav aria-label="Page navigation example" id="pagination">
+                <ul className="pagination">
+                  <li className="page-item">
+                    <button
+                      disabled={page <= 1}
+                      onClick={() => setPage(page - 1)}
+                      className="page-link"
+                      href="#"
+                      aria-label="Previous"
+                    >
+                      <span aria-hidden="true">«</span>
+                    </button>
+                  </li>
+                  {menuItemsShow}
+                  <li className="page-item">
+                    <button
+                      disabled={page >= totalpage}
+                      onClick={() => setPage(page + 1)}
+                      className="page-link"
+                      href="#"
+                      aria-label="Next"
+                    >
+                      <span aria-hidden="true">»</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
             </div>
+            </div>
+    
           </div>
         </div>
       </div>

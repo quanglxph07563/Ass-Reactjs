@@ -2,23 +2,27 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useParams } from "react-router-dom";
+
 const EditProduct = () => {
   let history = useHistory();
   const { register, handleSubmit, watch, errors } = useForm();
   let { id } = useParams();
-  const [detail, setDeatil] = useState({});
+  const [detail, setDetail] = useState({});
   const [category, setCategory] = useState([]);
-  let categoryDetail = 0
-  const setList =  () => {
-      axios
+  const [detailSp, setDetailSp] = useState({});
+
+  let categoryDetail = 0;
+  const setList = () => {
+    axios
       .get("http://127.0.0.1:8000/api/products/" + id)
       .then(function (response) {
         // console.log(response.data)
-        setDeatil(response.data.data);
-        console.log( response.data.data.idCategory)
-        categoryDetail = response.data.data.idCategory
+        setDetail(response.data.data);
+        console.log(response.data.data.idCategory);
+        categoryDetail = response.data.data.idCategory;
       })
       .catch(function (error) {
         console.log(error);
@@ -26,15 +30,18 @@ const EditProduct = () => {
   };
   useEffect(setList, []);
   const getcategory = () => {
-    var htmlCategory='<option value ="">Choose...</option>'
+    var htmlCategory = '<option value ="">Choose...</option>';
     axios
       .get("http://127.0.0.1:8000/api/category")
       .then(function (response) {
         setCategory(response.data.data);
-        response.data.data.map((item, index) => (     
-          htmlCategory += `<option ${item.id == categoryDetail?'selected':''}  value =${item.id}>${item.name_category}</option>`
-        ))
-           document.getElementById('inputGroupSelect01').innerHTML =htmlCategory
+        response.data.data.map(
+          (item, index) =>
+            (htmlCategory += `<option ${
+              item.id == categoryDetail ? "selected" : ""
+            }  value =${item.id}>${item.name_category}</option>`)
+        );
+        document.getElementById("inputGroupSelect01").innerHTML = htmlCategory;
       })
       .catch(function (error) {
         console.log(error);
@@ -54,7 +61,7 @@ const EditProduct = () => {
   };
   const onHandleChange = (e) => {
     const { name, value } = e.target;
-    setDeatil({
+    setDetail({
       ...detail,
       [name]: value,
     });
@@ -85,9 +92,7 @@ const EditProduct = () => {
               ref={register({ required: true })}
               className="custom-select"
               id="inputGroupSelect01"
-            >
-
-            </select>
+            ></select>
             {errors.idCategory && (
               <span className="loi">Danh mục không được để trống</span>
             )}
@@ -164,26 +169,14 @@ const EditProduct = () => {
                 "Số lượng sản phẩm không được lớn hơn 0 "}
             </span>
           </div>
-          <div className="form-group">
-            <label htmlFor="exampleFormControlTextarea1">
-              Chi tiết sản phẩm
-            </label>
-            <textarea
-              className="form-control"
-              name="detail"
-              rows={5}
-              defaultValue={""}
-              value={detail.detail}
-              onChange={onHandleChange}
-              ref={register({ required: true })}
-            />
-            {errors.detail && (
-              <span className="loi">
-                {" "}
-                Chi tiết sản phẩm không được để trống
-              </span>
-            )}
-          </div>
+          <CKEditor
+            editor={ClassicEditor}
+            data={detail.detail}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              setDetailSp(data);
+            }}
+          />
         </div>
         <div className="d-flex justify-content-end">
           <button type="submit" class="btn btn-primary">
