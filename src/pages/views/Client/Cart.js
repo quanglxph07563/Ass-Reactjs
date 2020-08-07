@@ -74,18 +74,18 @@ function Cart() {
     document.querySelector(".product-count").innerHTML=totalsp
     }
 
-  function financial(price) {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
+  function financial(sale) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(sale)
   }
 
-  function totalgia(price,sl) {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price*sl)
+  function totalgia(sale,sl) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(sale*sl)
   }
 
   function totalPriceProduc() {
     var totalPrice =0
     items.map((elements, index)=>(
-      totalPrice +=  elements.data.data.price*elements.data.data.sl
+      totalPrice +=  elements.data.data.sale*elements.data.data.sl
     ))
     return financial(totalPrice)
   }
@@ -119,7 +119,7 @@ function Cart() {
                           <th className="product-remove">&nbsp;</th>
                           <th className="product-thumbnail">&nbsp;</th>
                           <th className="product-name">SẢN PHẨM</th>
-                          <th className="product-price">GIÁ BÁN</th>
+                          <th className="product-sale">GIÁ BÁN</th>
                           <th className="product-quantity">SỐ LƯỢNG</th>
                           <th className="product-subtotal">THÀNH TIỀN</th>
                         </tr>
@@ -153,8 +153,8 @@ function Cart() {
                               {elements.data.data.name_product}
                               </a>
                             </td>
-                            <td className="product-price">
-                              <span className="amount">{financial(elements.data.data.price)}</span>
+                            <td className="product-sale">
+                              <span className="amount">{financial(elements.data.data.sale)}</span>
                             </td>
                             <td className="product-quantity">
                               <div className="quantity buttons_added">
@@ -173,7 +173,7 @@ function Cart() {
                               </div>
                             </td>
                             <td className="product-subtotal">
-                           <span className="amount">{totalgia(elements.data.data.price,elements.data.data.sl)}</span>
+                           <span className="amount">{totalgia(elements.data.data.sale,elements.data.data.sl)}</span>
                             </td>
                           </tr>
                            ))
@@ -190,7 +190,7 @@ function Cart() {
                             <th>Tổng tiền thành toán</th>
                             <td>
                               <strong>
-                                <span className="amount" id="total-price">
+                                <span className="amount" id="total-sale">
                                 {totalPriceProduc()}
                                 </span>
                               </strong>{" "}

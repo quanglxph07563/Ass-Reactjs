@@ -2,16 +2,25 @@ import React, { useState, useEffect } from 'react'
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import swal from "sweetalert";
+import http from "../../../../api/api.js";
 
 function AddCategory() {
   let history = useHistory();
 const { register, handleSubmit, watch, errors } = useForm();
   const onSubmit = (data) => {
     data.images = document.querySelector("#show_images img").src;
-    axios
-      .post("http://127.0.0.1:8000/api/category/", data)
+    http
+      .post("category/", data)
       .then(function (response) {
+        swal({
+          title: 'Thêm mới thành công',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500
+        }).then(()=>{
         history.push("/admin/category");
+        })
       })
       .catch(function (error) {
         document.getElementById('trung_ten').innerHTML = error.response.data.errors.name_category

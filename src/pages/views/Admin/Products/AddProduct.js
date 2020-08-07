@@ -4,6 +4,9 @@ import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import swal from "sweetalert";
+import http from "../../../../api/api.js";
+
 const AddProduct = () => {
   let history = useHistory();
   const { register, handleSubmit, watch, errors } = useForm();
@@ -13,18 +16,33 @@ const AddProduct = () => {
   const onSubmit = (data) => {
     data.images = document.querySelector("#show_images img").src;
     data.detail = detail;
-    axios
-      .post("http://127.0.0.1:8000/api/products/", data)
+    document.getElementsByClassName('loi').innerHTML=''
+    http
+      .post("products/", data)
       .then(function (response) {
-        history.push("/admin/products");
+        swal({
+          title: 'Thêm mới thành công',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500
+        }).then(()=>{
+          history.push("/admin/products");
+        });
       })
       .catch(function (error) {
+        document.getElementById('sale').innerHTML = ''
+        document.getElementById('detail').innerHTML = ''
+
+        var loi= error.response.data.errors
+        for (const property in loi) {
+           document.getElementById(`${property}`).innerHTML = `${loi[property]}`
+        }
         console.log(error);
       });
   };
   const getcategory = () => {
-    axios
-      .get("http://127.0.0.1:8000/api/get-all-category")
+    http
+      .get("get-all-category")
       .then(function (response) {
         setCategory(response.data);
       })
@@ -84,8 +102,10 @@ const AddProduct = () => {
                     type="text"
                     ref={register({
                       required: true,
+                      pattern:/^(?=[A-Za-z0-9])([A-Za-z0-9\s]*)(?<=[A-Za-z0-9])$/,
                       minLength: 10,
                       maxLength: 60,
+                     
                     })}
                     className="form-control"
                     name="name_product"
@@ -93,6 +113,8 @@ const AddProduct = () => {
                   <span className="loi">
                     {errors.name_product?.type === "required" &&
                       "Tên sản phẩm không được để trống"}
+                       {errors.name_product?.type === "pattern" &&
+                      "Chỉ được nhập chữ và số"}
                     {errors.name_product?.type === "minLength" &&
                       "Tên sản phẩm không được nhỏ hơn 10 ký tự"}
                     {errors.name_product?.type === "maxLength" &&
@@ -142,10 +164,10 @@ const AddProduct = () => {
                     name="sale"
                   />
                   {/* {errors.price && <span className="loi">Giá Tiền không được để trống và k được lớn hơn 3</span>} */}
-                  <span className="loi">
-                    {errors.price?.type === "required" &&
+                  <span className="loi" id='sale'>
+                    {errors.sale?.type === "required" &&
                       "Sale phẩm không dược để trống"}
-                    {errors.price?.type === "min" &&
+                    {errors.sale?.type === "min" &&
                       "Sale sản phẩm không được lớn hơn 0 "}
                   </span>
                 </div>
@@ -173,6 +195,9 @@ const AddProduct = () => {
                     // console.log( { event, editor, data } );
                   }}
                 />
+                 <span className="loi" id='detail'>
+                   
+                  </span>
               </div>
               <div className="d-flex justify-content-end">
                 <button

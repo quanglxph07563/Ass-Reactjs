@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import http from "../../../../api/api.js";
+
 function ShowCategory() {
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
@@ -10,8 +12,8 @@ function ShowCategory() {
   const [menuItemsShow, setmenuItems] = useState([]);
   var stt =3*(page-1) +1
   const setList = () => {
-    axios
-      .get(`http://127.0.0.1:8000/api/category?page=${page}`)
+    http
+      .get(`category?page=${page}`)
       .then(function (response) {
         setItems(response.data.data);
         setTotalpage(response.data.last_page)
@@ -24,8 +26,8 @@ function ShowCategory() {
   useEffect(setList, [page]);
 
   const deletecategory = (id) => {
-    axios
-      .delete("http://127.0.0.1:8000/api/category/" + id)
+    http
+      .delete("category/" + id)
       .then(function (response) {
         setList();
         swal({

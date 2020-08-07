@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import ChuongTrinh from "../../../components/Client/ChuongTrinh/ChuongTrinh";
 import Slide from "../../../components/Client/Slide/Slide";
+import http from '../../../api/api';
 
 function TrangChu() {
   const [category, setCategory] = useState([]);
@@ -15,8 +16,8 @@ function TrangChu() {
   const [menuItemsShow, setmenuItems] = useState([]);
   var stt = 3 * (page - 1) + 1;
   const setList = () => {
-    axios
-      .get("http://127.0.0.1:8000/api/get-all-category")
+    http
+      .get("get-all-category")
       .then(function (response) {
         setCategory(response.data);
       })
@@ -26,9 +27,9 @@ function TrangChu() {
   };
   useEffect(setList, []);
   const getProduct = () => {
-    axios
+    http
       .get(
-        "http://127.0.0.1:8000/api/products/get-product-client/" +
+        "products/get-product-client/" +
           searchCategory +
           `?page=${page}`
       )
@@ -208,9 +209,12 @@ function TrangChu() {
                           <div style={{ height: "200px" }}>
                             <img src={element.images} alt="" />
                           </div>
-                          <h2>{financial(element.price)}</h2>
+                          <span><del>{financial(element.price)}</del></span>
+                          <h2>{financial(element.sale)}</h2>
                           <p style={{ height: "50px" }}>
-                            {element.name_product}
+                          <Link to={`chi-tiet-san-pham/${element.id}`}>
+                          {element.name_product}
+                        </Link>
                           </p>
                           <button 
                            data-quantity={1}

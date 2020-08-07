@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import http from "../../../../api/api.js";
 
 import { useParams } from "react-router-dom";
+import swal from "sweetalert";
 
 function EditCategory() {
     let history = useHistory();
@@ -13,8 +15,8 @@ function EditCategory() {
     const [category, setCategory] = useState([]);
     let categoryDetail = 0
     const setList =  () => {
-        axios
-        .get("http://127.0.0.1:8000/api/category/" + id)
+        http
+        .get("category/" + id)
         .then(function (response) {
           // console.log(response.data)
           setDeatil(response.data.data);
@@ -28,12 +30,22 @@ function EditCategory() {
     useEffect(setList, []);
     const capNhatDanhMuc = (data) => {
       data.images = document.querySelector("#show_images img").src;
-      axios
-        .put("http://127.0.0.1:8000/api/category/" + id, data)
+      data.id_danhmuc = id
+      http
+        .put("category/" + id, data)
         .then(function (response) {
+          swal({
+            title: 'Cập nhật thành công',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1500
+          }).then(()=>{
           history.push("/admin/category");
+          })
         })
         .catch(function (error) {
+          document.getElementById('trung_ten').innerHTML = error.response.data.errors.name_category
+
           console.log(error);
         });
     };
@@ -84,7 +96,7 @@ function EditCategory() {
                       className="form-control"
                       name="name_category"
                     />
-                    <span className="loi">
+                    <span className="loi" id='trung_ten'>
                       {errors.name_category?.type === "required" &&
                         "Tên danh mục không được để trống"}
                       {errors.name_category?.type === "minLength" &&

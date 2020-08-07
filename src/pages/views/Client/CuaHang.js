@@ -1,32 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
+import http from '../../../api/api';
 function CuaHang() {
   const [items, setItems] = useState([]);
+  const setTimeSearch = useRef(null);
+  const [totalpage, setTotalpage] = useState(1);
+  const [menuItemsShow, setmenuItems] = useState([]);
+  const [page, setPage] = useState({
+    key: "",
+    sort: "",
+    page:1,
+  });
   const setList = () => {
-    axios
-      .get("http://127.0.0.1:8000/api/products/")
+    http
+      .get(`get-client-cua-hang-product?key=${page.key}&sort=${page.sort}&page=${page.page}`)
       .then(function (response) {
         setItems(response.data.data);
+        setTotalpage(response.data.last_page);
+        pagination(response.data.last_page);
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
       });
   };
 
-  useEffect(setList, []);
+  useEffect(setList, [page]);
 
   const addCart = (e) => {
     var sl = 1;
     var dataSp = e.target;
-    console.log(dataSp);
+    // console.log(dataSp);
     var getCart = localStorage.getItem("cart");
     var sanpham = {
       id: dataSp.getAttribute("data-product-id"),
       sl: parseInt(dataSp.getAttribute("data-quantity")),
     };
-    console.log(typeof sanpham.sl);
+    // console.log(typeof sanpham.sl);
     if (getCart != null) {
       var bien = true;
       var listsp = JSON.parse(getCart);
@@ -40,7 +51,7 @@ function CuaHang() {
         listsp.push(sanpham);
       }
       var sonlistsp = JSON.stringify(listsp);
-      console.log(sonlistsp);
+      // console.log(sonlistsp);
       localStorage.setItem("cart", sonlistsp);
       swal({
         title: "Thêm sản phẩm thành công!",
@@ -67,7 +78,7 @@ function CuaHang() {
     var getCart = localStorage.getItem("cart");
     var listsp = JSON.parse(getCart);
     var totalsp = 0;
-    console.log(listsp);
+    // console.log(listsp);
     if (listsp != null) {
       listsp.forEach((elements) => {
         totalsp += elements.sl;
@@ -89,20 +100,62 @@ function CuaHang() {
   }
 
   const searchKey = (e) => {
-    var key = e.target.value;
-    if (!key) {
-      key = "trong";
+    var keySearch = e.target.value;
+    if (setTimeSearch.current) {
+      clearTimeout(setTimeSearch.current);
     }
-    console.log(key);
-    axios
-      .get("http://127.0.0.1:8000/api/products/search/" + key)
-      .then(function (response) {
-        setItems(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
+console.log(page.page)
+    setTimeSearch.current = setTimeout(() => {
+      setPage({
+        ...page,
+        page: 1,
+        key: keySearch,
       });
+      // console.log(keySearch)
+    }, 300);
   };
+  let menuItems = [];
+
+  const chuyenPage = (e) => {
+    setPage({
+      ...page,
+      page: Number(e.target.getAttribute("page")),
+    });
+  };
+  const pagination = (totalpage) => {
+    // console.log(totalpage);
+    for (let index = 1; index < totalpage + 1; index++) {
+      if (page.page == index) {
+        menuItems.push(
+          <li className="page-item active">
+            <a
+              className="page-link"
+              style={{ color: "black" }}
+              page={index}
+              onClick={chuyenPage}
+            >
+              {index}
+            </a>
+          </li>
+        );
+      } else {
+        menuItems.push(
+          <li className="page-item">
+            <a
+              className="page-link"
+              style={{ color: "black" }}
+              page={index}
+              onClick={chuyenPage}
+            >
+              {index}
+            </a>
+          </li>
+        );
+      }
+    }
+    setmenuItems([menuItems]);
+  };
+  console.log(page.page)
   return (
     <div>
       <div className="product-big-title-area">
@@ -120,12 +173,21 @@ function CuaHang() {
         <div className="row ">
           <div className="form-group col-md-3">
             <label htmlFor="exampleFormControlSelect1">Sắp xếp theo</label>
-            <select className="form-control" id="xapxep">
+            <select className="form-control" 
+            onChange={(e) => {
+              setPage({
+                ...page,
+                sort: e.target.value,
+                page: 1,
+              });
+            }}
+            >
               <option>Chọn</option>
-              <option value={1}>Giá Thấp -&gt; Cao</option>
-              <option value={2}>Giá Cao -&gt; Thấp</option>
-              <option value={3}>Từ A -&gt; Z</option>
-              <option value={4}>Từ Z -&gt; A</option>
+              <option value={0}>Từ A -&gt; Z</option>
+              <option value={1}>Từ Z -&gt; A</option>
+              <option value={2}>Giá Thấp -&gt; Cao</option>
+              <option value={3}>Giá Cao -&gt; Thấp</option>
+              
             </select>
           </div>
           <div className="col-md-3">
@@ -152,10 +214,11 @@ function CuaHang() {
                 <div className="product-image-wrapper">
                   <div className="single-products">
                     <div className="productinfo text-center">
-                      <div style={{ height: "300px" }}>
+                      <div style={{ height: "280px" }}>
                         <img src={product.images} alt="" />
                       </div>
-                      <h2>{financial(product.price)}</h2>
+                      <span><del>{financial(product.price)}</del></span>
+                      <h2>{financial(product.sale)}</h2>
                       <p style={{ height: "50px" }}>
                         <Link to={`chi-tiet-san-pham/${product.id}`}>
                           {product.name_product}
@@ -224,29 +287,43 @@ function CuaHang() {
               // </div>
             ))}
           </div>
-          {/* <div className="row">
-            <div className="col-md-12">
-              <div className="product-pagination text-center">
-                <nav>
-                  <ul className="pagination" id="phantrang">
-                    <li>
-                      <a
-                        className="activephantrang activept"
-                        onclick="getdata(1,this)"
-                      >
-                        1
-                      </a>
-                    </li>
-                    <li>
-                      <a className="activephantrang" onclick="getdata(2,this)">
-                        2
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-            </div>
-          </div> */}
+          <nav aria-label="Page navigation example" id="pagination">
+                <ul className="pagination">
+                  <li className="page-item">
+                    <button
+                      disabled={page.page <= 1}
+                      onClick={() => setPage(
+                        {
+                          ...page,
+                          page : page.page - 1
+                          })}
+                      className="page-link"
+                      href="#"
+                      aria-label="Previous"
+                    >
+                      <span aria-hidden="true">«</span>
+                    </button>
+                  </li>
+                  {menuItemsShow}
+                  <li className="page-item">
+                    <button
+                      disabled={page.page >= totalpage}
+                      onClick={() => setPage(
+                        {
+                        ...page,
+                        page : page.page + 1
+                        }
+                        )
+                      }
+                      className="page-link"
+                      href="#"
+                      aria-label="Next"
+                    >
+                      <span aria-hidden="true">»</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
         </div>
       </div>
     </div>

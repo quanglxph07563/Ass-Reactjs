@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
@@ -10,13 +10,13 @@ const ShowProducts = ({ addFormData }) => {
     page_size: 3,
     page: 1,
     iddm: null,
-    key: '',
+    key: "",
   });
   const [totalpage, setTotalpage] = useState(1);
   const [menuItemsShow, setmenuItems] = useState([]);
   const [category, setCategory] = useState([]);
 
-  const setTimeSearch = useRef(null)
+  const setTimeSearch = useRef(null);
   var stt = page.page_size * (page.page - 1) + 1;
   const setList = () => {
     http
@@ -25,6 +25,7 @@ const ShowProducts = ({ addFormData }) => {
       )
       .then(function (response) {
         setItems(response.data.data);
+        console.log(response.data.last_page);
         setTotalpage(response.data.last_page);
         pagination(response.data.last_page);
         // console.log(response)
@@ -36,20 +37,30 @@ const ShowProducts = ({ addFormData }) => {
 
   useEffect(setList, [page]);
   const deleteProduct = (id) => {
-    http
-      .delete("products/" + id)
-      .then(function (response) {
-        setList();
-        swal({
-          title: "Xóa phẩm thành công!",
-          text: "You clicked the button!",
-          icon: "success",
-          button: "Đóng!",
-        });
-      })
-      .catch(function (error) {
-        // console.log(error);
-      });
+    swal({
+      title: "Bạn chắc chắn muốn xóa ?",
+      // text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((result) => {
+      if (result) {
+        http
+          .delete("products/" + id)
+          .then(function (response) {
+            setList();
+            swal({
+              title: "Xóa phẩm thành công!",
+              text: "You clicked the button!",
+              icon: "success",
+              button: "Đóng!",
+            });
+          })
+          .catch(function (error) {
+            // console.log(error);
+          });
+      }
+    });
   };
 
   let menuItems = [];
@@ -129,40 +140,55 @@ const ShowProducts = ({ addFormData }) => {
   };
   useEffect(getcategory, []);
   const searchKey = (e) => {
-    var keySearch = e.target.value
-    if(setTimeSearch.current){
-      clearTimeout(setTimeSearch.current)
+    var keySearch = e.target.value;
+    if (setTimeSearch.current) {
+      clearTimeout(setTimeSearch.current);
     }
-    setTimeSearch.current= setTimeout(() => {
+    setTimeSearch.current = setTimeout(() => {
       setPage({
         ...page,
-        key: keySearch
+        page: 1,
+        key: keySearch,
       });
     }, 300);
-   
   };
-  const deleteListId=()=>{
-    var listId = []
+  const deleteListId = () => {
+    var listId = [];
     for (let index = 0; index < check.length; index++) {
-      if(check[index].checked){
-        listId.push(check[index].getAttribute('id_product'))
+      if (check[index].checked) {
+        listId.push(check[index].getAttribute("id_product"));
       }
     }
-    http
-    .post("products/delete-multiple-products", listId)
-    .then(function (response) {
-      setList();
-      swal({
-        title: "Xóa phẩm thành công!",
-        text: "You clicked the button!",
-        icon: "success",
-        button: "Đóng!",
-      });
-    })
-    .catch(function (error) {
-      console.log(error);
+    swal({
+      title: "Bạn chắc chắn muốn xóa ?",
+      // text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((result) => {
+      if (result) {
+        http
+          .post("products/delete-multiple-products", listId)
+          .then(function (response) {
+            setList();
+            swal({
+              title: "Xóa phẩm thành công!",
+              text: "You clicked the button!",
+              icon: "success",
+              button: "Đóng!",
+            });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     });
-    console.log(listId)
+  };
+  function financial(price) {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
   }
   return (
     <div className="table">
@@ -180,6 +206,7 @@ const ShowProducts = ({ addFormData }) => {
             onChange={(e) => {
               setPage({
                 ...page,
+                page: 1,
                 iddm: e.target.value,
               });
             }}
@@ -187,9 +214,7 @@ const ShowProducts = ({ addFormData }) => {
             <option value="" selected>
               Tất cả
             </option>
-            <option value={0} >
-              Chưa có danh mục
-            </option>
+            <option value={0}>Chưa có danh mục</option>
             {category.map((item, index) => (
               <option value={item.id}>{item.name_category}</option>
             ))}
@@ -210,11 +235,13 @@ const ShowProducts = ({ addFormData }) => {
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="exampleFormControlSelect1">Kích thước</label>
-          <select className="form-control"
+          <select
+            className="form-control"
             onChange={(e) => {
               setPage({
                 ...page,
                 page_size: e.target.value,
+                page: 1,
               });
             }}
           >
@@ -236,7 +263,9 @@ const ShowProducts = ({ addFormData }) => {
             <th scope="col">Tên sản phẩm </th>
             <th scope="col">Images</th>
             <th scope="col">Giá</th>
+            <th scope="col">Sale</th>
             <th scope="col">Số lượng</th>
+            <th scope="col">Tình trạng</th>
             <th scope="col">Danh mục</th>
             <th scope="col">Chức năng</th>
           </tr>
@@ -258,18 +287,16 @@ const ShowProducts = ({ addFormData }) => {
                 {" "}
                 <img style={{ width: "120px" }} src={product.images} alt="" />
               </td>
-              <td>{product.price}</td>
+              <td>{financial(product.price)}</td>
+              <td>{financial(product.sale)}</td>
               <td>{product.amount}</td>
+              <td>{product.amount>0?'Còn hàng':'Hết hàng'}</td>
               <td>{product.tendm}</td>
               <td>
                 <button
                   type="button"
                   onClick={() => {
-                    if (
-                      window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này")
-                    ) {
-                      deleteProduct(product.id);
-                    }
+                    deleteProduct(product.id);
                   }}
                   className="btn btn-warning"
                 >
@@ -288,13 +315,15 @@ const ShowProducts = ({ addFormData }) => {
             </tr>
           ))}
         </tbody>
-        <button type="button" onClick = {deleteListId} className="btn btn-danger">Xóa mục đã chọn</button>
+        <button type="button" onClick={deleteListId} className="btn btn-danger">
+          Xóa mục đã chọn
+        </button>
       </table>
       <nav aria-label="Page navigation example" id="pagination">
         <ul className="pagination">
           <li className="page-item">
             <button
-              disabled={page <= 1}
+              disabled={page.page <= 1}
               onClick={() => setPage({ ...page, page: page.page - 1 })}
               className="page-link"
               href="#"
@@ -306,7 +335,7 @@ const ShowProducts = ({ addFormData }) => {
           {menuItemsShow}
           <li className="page-item">
             <button
-              disabled={page >= totalpage}
+              disabled={page.page >= totalpage}
               onClick={() =>
                 setPage({
                   ...page,
