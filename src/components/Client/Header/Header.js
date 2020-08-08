@@ -75,7 +75,7 @@ function Header({ infoUser }) {
       <div className="header-area">
         <div className="container">
           <div className="row">
-            <div className="col-md-8">
+            <div className="col-md-7">
               <div className="user-menu">
                 <ul>
                   <li>
@@ -101,7 +101,7 @@ function Header({ infoUser }) {
                 </ul>
               </div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-5">
               <div className="user-menu">
                 {localStorage.userToken?infoUser.permission==1 ?userLogin:adminLogin:userNotLogin}
               </div>

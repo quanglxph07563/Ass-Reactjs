@@ -55,6 +55,18 @@ export const Sidebar = () => {
               </div>
             </div>
           </li>
+          <li className="nav-item">
+            <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#donhang" aria-expanded="true" aria-controls="collapseUtilities">
+              <i className="fas fa-fw fa-wrench" />
+              <span>Đơn hàng</span>
+            </a>
+            <div id="donhang" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+              <div className="bg-white py-2 collapse-inner rounded">
+                <h6 className="collapse-header">Chức năng</h6>
+                <Link className="collapse-item" to="/admin/donhang">Danh sách</Link>
+              </div>
+            </div>
+          </li>
           {/* Divider */}
           <hr className="sidebar-divider" />
           {/* Heading */}
@@ -65,18 +77,11 @@ export const Sidebar = () => {
           <li className="nav-item">
             <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
               <i className="fas fa-fw fa-folder" />
-              <span>Pages</span>
+              <span>User</span>
             </a>
             <div id="collapsePages" className="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
-                <h6 className="collapse-header">Login Screens:</h6>
-                <a className="collapse-item" href="login.html">Login</a>
-                <a className="collapse-item" href="register.html">Register</a>
-                <a className="collapse-item" href="forgot-password.html">Forgot Password</a>
-                <div className="collapse-divider" />
-                <h6 className="collapse-header">Other Pages:</h6>
-                <a className="collapse-item" href="404.html">404 Page</a>
-                <a className="collapse-item" href="blank.html">Blank Page</a>
+                <Link className="collapse-item" to="/admin/user">Danh sách</Link>
               </div>
             </div>
           </li>

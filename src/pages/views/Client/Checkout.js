@@ -86,11 +86,25 @@ function Checkout() {
           timer: 1500
       }).then(()=>{
         localStorage.removeItem('cart')
+        getCountCart()
       history.push("thanh-toan-thanh-cong");
       })
     })
     .catch(function (error) {
     });
+  };
+  const getCountCart = () => {
+    var getCart = localStorage.getItem("cart");
+    var listsp = JSON.parse(getCart);
+    var totalsp = 0;
+    // console.log(listsp);
+    if (listsp != null) {
+      listsp.forEach((elements) => {
+        totalsp += elements.sl;
+      });
+    }
+
+    document.querySelector(".product-count").innerHTML = totalsp;
   };
   return (
     <div>

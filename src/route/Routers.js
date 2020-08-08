@@ -18,6 +18,8 @@ import ShowCategory from "../pages/views/Admin/Category/ShowCategory";
 import EditCategory from "../pages/views/Admin/Category/EditCategory";
 import Login from "../pages/views/Client/Login";
 import Signup from "../pages/views/Client/Signup";
+import DonHang from "../pages/views/Admin/DonHang";
+import ListUser from "../pages/views/Admin/User/ListUser";
 
 const Routers = () => {
   return (
@@ -48,6 +50,15 @@ const Routers = () => {
               <Route path="/admin/edit-category/:id" exact>
                 <EditCategory />
               </Route>
+
+              <Route path="/admin/donhang" exact>
+                <DonHang/>
+              </Route>
+              
+              <Route path="/admin/user" exact>
+                <ListUser />
+              </Route>
+
             </Switch>
           </LayoutAdmin>
         </Route>
