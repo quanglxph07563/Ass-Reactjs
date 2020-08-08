@@ -9,6 +9,7 @@ function Header({ infoUser }) {
   const logout =(e)=>{
     e.preventDefault()
     localStorage.removeItem('userToken')
+    localStorage.removeItem('infoUser')
     swal({
       title: 'Đăng xuất thành công',
         icon: 'success',
@@ -30,6 +31,26 @@ function Header({ infoUser }) {
         <a href='' onClick = {logout}>
           <i className="fa fa-user" /> Logout
         </a>
+      </li>
+    </ul>
+  );
+
+  const adminLogin = (
+    <ul>
+      <li>
+        <a href="checkout.html">
+          <i className="fa fa-user" /> Xin chào : {infoUser.name}
+        </a>
+      </li>
+      <li>
+        <a href='' onClick = {logout}>
+          <i className="fa fa-user" /> Logout
+        </a>
+      </li>
+      <li>
+      <Link to="admin/dashboard">
+          <i className="fa fa-user" /> Quản trị
+        </Link>
       </li>
     </ul>
   );
@@ -82,7 +103,7 @@ function Header({ infoUser }) {
             </div>
             <div className="col-md-4">
               <div className="user-menu">
-                {localStorage.userToken?userLogin:userNotLogin}
+                {localStorage.userToken?infoUser.permission==1 ?userLogin:adminLogin:userNotLogin}
               </div>
             </div>
           </div>

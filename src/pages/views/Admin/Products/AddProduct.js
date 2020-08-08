@@ -129,10 +129,19 @@ const AddProduct = () => {
                     className="form-control"
                     id="images"
                     name="images"
-                    ref={register({ required: true })}
+                    ref={register({ required: true ,
+                      validate: (value) => {
+                        let patternImage = /\S{1,}[^\.][\.][p|j][n|p][g|e]g?$/g;
+                        let checkImage = patternImage.test(value[0].name);
+                        return checkImage;
+                      },
+                    })}      
                   />
                   <span className="loi">
-                    {errors.images?.type === "required" && "Chọn ảnh sản phẩm"}
+                  {errors.images?.type === "required" &&
+                      "Chọn ảnh sản phẩm"}
+                       {errors.images?.type === "validate" &&
+                      "Vui lòng upload image .png .jpg, jpeg"}
                   </span>
                   <div id="show_images" className="pt-3">
                     <img style={{ width: "200px" }} src alt="" />

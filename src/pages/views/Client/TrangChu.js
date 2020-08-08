@@ -89,7 +89,7 @@ function TrangChu() {
     console.log(dataSp);
     var getCart = localStorage.getItem("cart");
     var sanpham = {
-      id: dataSp.getAttribute("data-product-id"),
+      id: parseInt(dataSp.getAttribute("data-product-id")),
       sl: parseInt(dataSp.getAttribute("data-quantity")),
     };
     console.log(typeof sanpham.sl);

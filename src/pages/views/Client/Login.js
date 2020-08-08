@@ -17,9 +17,10 @@ import http from '../../../api/api';
 function Login() {
 const { register, handleSubmit, watch, errors } = useForm();
 let history = useHistory();
-
+if(localStorage.getItem('userToken')){
+    history.push("/");
+}
 const onSubmit = (data) => {
-  console.log(data)
   http
     .post("auth/login", data)
     .then(function (response) {
@@ -30,10 +31,23 @@ const onSubmit = (data) => {
           timer: 1500
       }).then(()=>{
         localStorage.setItem('userToken',response.data.access_token)
+          axios
+            .get("http://127.0.0.1:8000/api/auth/user/", {
+              headers: { Authorization: `Bearer ${response.data.access_token}` },
+            })
+            .then(function (response) {
+              localStorage.setItem('infoUser',JSON.stringify(response.data))
+
+            })
+            .catch(function (error) {
+              
+            });
+ 
       history.push("/");
       })
     })
     .catch(function (error) {
+      document.getElementById('loi').innerHTML=error.response.data.message
     });
 };
     return (
@@ -72,6 +86,7 @@ const onSubmit = (data) => {
                         "Password không được để trống"}
                     </span>
                 </div>
+                <div className='text-center'><span className='loi' id='loi'></span></div>
                 <div className="contact100-form-checkbox">
                   <input className="input-checkbox100" 
                   id="ckb1" type="checkbox" name="remember-me" />
