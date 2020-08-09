@@ -20,6 +20,16 @@ import Login from "../pages/views/Client/Login";
 import Signup from "../pages/views/Client/Signup";
 import DonHang from "../pages/views/Admin/DonHang";
 import ListUser from "../pages/views/Admin/User/ListUser";
+import DanhSach from "../pages/views/Admin/ArticleCategories/DanhSach";
+import AddDanhMucBaiViet from "../pages/views/Admin/ArticleCategories/AddDanhMucBaiViet";
+import EditDanhMucBaiViet from "../pages/views/Admin/ArticleCategories/EditDanhMucBaiViet";
+import DanhSachBaiViet from "../pages/views/Admin/Posts/DanhSachBaiViet";
+import AddBaiViet from "../pages/views/Admin/Posts/AddBaiViet";
+import SuaBaiViet from "../pages/views/Admin/Posts/SuaBaiViet";
+import PhanHoi from "../pages/views/Admin/PhanHoi/PhanHoi";
+import BaiViet from "../pages/views/Client/BaiViet";
+import ChiTietBaiViet from "../pages/views/Client/ChiTietBaiViet";
+import DonHangPheDuyet from "../pages/views/Admin/DonHang/DonHangPheDuyet";
 
 const Routers = () => {
   return (
@@ -52,13 +62,42 @@ const Routers = () => {
               </Route>
 
               <Route path="/admin/donhang" exact>
-                <DonHang/>
+                <DonHang />
               </Route>
-              
+
+              <Route path="/admin/donhang-da-phe-duyet" exact>
+                <DonHangPheDuyet />
+              </Route>
+
               <Route path="/admin/user" exact>
                 <ListUser />
               </Route>
 
+              <Route path="/admin/danh-muc-bai-viet" exact>
+                <DanhSach />
+              </Route>
+
+              <Route path="/admin/add-danh-muc-bai-viet" exact>
+                <AddDanhMucBaiViet />
+              </Route>
+
+              <Route path="/admin/edit-danh-muc-bai-viet/:id" exact>
+                <EditDanhMucBaiViet />
+              </Route>
+
+              <Route path="/admin/danh-sach-bai-viet/" exact>
+                <DanhSachBaiViet />
+              </Route>
+              <Route path="/admin/add-bai-viet/" exact>
+                <AddBaiViet />
+              </Route>
+              <Route path="/admin/edit-bai-viet/:id" exact>
+                <SuaBaiViet />
+              </Route>
+
+              <Route path="/admin/phan-hoi" exact>
+                <PhanHoi />
+              </Route>
             </Switch>
           </LayoutAdmin>
         </Route>
@@ -66,7 +105,7 @@ const Routers = () => {
           <Login />
         </Route>
         <Route path="/signup" exact>
-          <Signup/>
+          <Signup />
         </Route>
         <Route>
           <Switch>
@@ -80,7 +119,7 @@ const Routers = () => {
               <Route path="/cua-hang" exact>
                 <CuaHang />
               </Route>
-              <Route path="/chi-tiet-san-pham/:id" exact>
+              <Route path="/chi-tiet-san-pham/:id">
                 <ChiTietSanPham />
               </Route>
               <Route path="/checkout" exact>
@@ -92,6 +131,14 @@ const Routers = () => {
               <Route path="/lien-he" exact>
                 <LienHe />
               </Route>
+
+              <Route path="/bai-viet" exact>
+                <BaiViet />
+              </Route>
+              <Route path="/chi-tiet-bai-viet/:id" exact>
+                <ChiTietBaiViet />
+              </Route>
+              
             </LayoutClinet>
           </Switch>
         </Route>

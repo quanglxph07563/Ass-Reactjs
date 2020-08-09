@@ -214,7 +214,7 @@ console.log(page.page)
                 <div className="product-image-wrapper">
                   <div className="single-products">
                     <div className="productinfo text-center">
-                      <div style={{ height: "280px" }}>
+                      <div style={{ height: "180px" }}>
                         <img src={product.images} alt="" />
                       </div>
                       <span><del>{financial(product.price)}</del></span>
@@ -287,6 +287,7 @@ console.log(page.page)
               // </div>
             ))}
           </div>
+          <div className='d-flex justify-content-center col-md-12'>
           <nav aria-label="Page navigation example" id="pagination">
                 <ul className="pagination">
                   <li className="page-item">
@@ -324,6 +325,7 @@ console.log(page.page)
                   </li>
                 </ul>
               </nav>
+              </div>
         </div>
       </div>
     </div>

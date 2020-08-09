@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { Link } from "react-router-dom";
-
 export const Sidebar = () => {
     return (
             <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -17,9 +16,9 @@ export const Sidebar = () => {
           <hr className="sidebar-divider my-0" />
           {/* Nav Item - Dashboard */}
           <li className="nav-item">
-            <a className="nav-link" href="index.html">
+            <Link className="nav-link" to="/admin/dashboard">
               <i className="fas fa-fw fa-tachometer-alt" />
-              <span>Dashboard</span></a>
+              <span>Dashboard</span></Link>
           </li>
           {/* Divider */}
           <hr className="sidebar-divider" />
@@ -63,7 +62,9 @@ export const Sidebar = () => {
             <div id="donhang" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
                 <h6 className="collapse-header">Chức năng</h6>
-                <Link className="collapse-item" to="/admin/donhang">Danh sách</Link>
+                <Link className="collapse-item" to="/admin/donhang">Đơn hàng</Link>
+                <Link className="collapse-item" to="/admin/donhang-da-phe-duyet">Đơn hàng hoàn tất</Link>
+
               </div>
             </div>
           </li>
@@ -85,18 +86,46 @@ export const Sidebar = () => {
               </div>
             </div>
           </li>
-          {/* Nav Item - Charts */}
           <li className="nav-item">
-            <a className="nav-link" href="charts.html">
-              <i className="fas fa-fw fa-chart-area" />
-              <span>Charts</span></a>
+            <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#danmucbaiviet" aria-expanded="true" aria-controls="collapsePages">
+              <i className="fas fa-fw fa-folder" />
+              <span>Danh mục bài viết</span>
+            </a>
+            <div id="danmucbaiviet" className="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+              <div className="bg-white py-2 collapse-inner rounded">
+                <Link className="collapse-item" to="/admin/danh-muc-bai-viet">Danh mục</Link>
+              </div>
+              <div className="bg-white py-2 collapse-inner rounded">
+                <Link className="collapse-item" to="/admin/add-danh-muc-bai-viet">Thêm danh mục</Link>
+              </div>
+            </div>
           </li>
-          {/* Nav Item - Tables */}
-          <li className="nav-item active">
-            <a className="nav-link" href="tables.html">
-              <i className="fas fa-fw fa-table" />
-              <span>Tables</span></a>
+          <li className="nav-item">
+            <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#baiviet" aria-expanded="true" aria-controls="collapsePages">
+              <i className="fas fa-fw fa-folder" />
+              <span>Bài viết</span>
+            </a>
+            <div id="baiviet" className="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+              <div className="bg-white py-2 collapse-inner rounded">
+                <Link className="collapse-item" to="/admin/danh-sach-bai-viet">Danh sách</Link>
+              </div>
+              <div className="bg-white py-2 collapse-inner rounded">
+                <Link className="collapse-item" to="/admin/add-bai-viet">Thêm bài viết</Link>
+              </div>
+            </div>
           </li>
+          <li className="nav-item">
+            <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#phanhoi" aria-expanded="true" aria-controls="collapsePages">
+              <i className="fas fa-fw fa-folder" />
+              <span>Phản hồi</span>
+            </a>
+            <div id="phanhoi" className="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+              <div className="bg-white py-2 collapse-inner rounded">
+                <Link className="collapse-item" to="/admin/phan-hoi">Danh sách</Link>
+              </div>
+            </div>
+          </li>
+          {/* Nav Item - Charts */}
           {/* Divider */}
           <hr className="sidebar-divider d-none d-md-block" />
           {/* Sidebar Toggler (Sidebar) */}

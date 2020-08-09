@@ -16,6 +16,9 @@ function Menu() {
             <li className="nav-item">
             <Link className="nav-link" to="/lien-he">Liên hệ <span className="sr-only">(current)</span></Link> 
             </li>
+            <li className="nav-item">
+            <Link className="nav-link" to="/bai-viet">Bài viết<span className="sr-only">(current)</span></Link> 
+            </li>
           </ul>
         </div>
       </nav>

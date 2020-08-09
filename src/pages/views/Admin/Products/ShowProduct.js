@@ -256,16 +256,19 @@ const ShowProducts = ({ addFormData }) => {
       <table className="table">
         <thead className="thead-light">
           <tr>
-            <th scope="col">
-              <input type="checkbox" id="checkAll" onClick={checkAll} /> Check
+            <th scope="col" style={{ width: "40px" }}>
+              <input type="checkbox" id="checkAll" onClick={checkAll} />
             </th>
-            <th scope="col">Stt</th>
-            <th scope="col">Tên sản phẩm </th>
+            <th scope="col" style={{ width: "40px" }}>
+              Stt
+            </th>
+            <th scope="col" style={{ width: "300px" }}>
+              Tên sản phẩm{" "}
+            </th>
             <th scope="col">Images</th>
-            <th scope="col">Giá</th>
-            <th scope="col">Sale</th>
-            <th scope="col">Số lượng</th>
-            <th scope="col">Tình trạng</th>
+            <th scope="col" style={{ width: "200px" }}>
+              Thông tin
+            </th>
             <th scope="col">Danh mục</th>
             <th scope="col">Chức năng</th>
           </tr>
@@ -287,10 +290,18 @@ const ShowProducts = ({ addFormData }) => {
                 {" "}
                 <img style={{ width: "120px" }} src={product.images} alt="" />
               </td>
-              <td>{financial(product.price)}</td>
-              <td>{financial(product.sale)}</td>
-              <td>{product.amount}</td>
-              <td>{product.amount>0?'Còn hàng':'Hết hàng'}</td>
+              <td>
+                <ul>
+                  <li>Price : {financial(product.price)}</li>
+                  <li>Sale : {financial(product.sale)}</li>
+                  <li>
+                    Số lượng : {new Intl.NumberFormat().format(product.amount)}
+                  </li>
+                  <li>
+                    Tình trạng : {product.amount > 0 ? "Còn hàng" : "Hết hàng"}
+                  </li>
+                </ul>
+              </td>
               <td>{product.tendm}</td>
               <td>
                 <button
@@ -315,42 +326,48 @@ const ShowProducts = ({ addFormData }) => {
             </tr>
           ))}
         </tbody>
-        <button type="button" onClick={deleteListId} className="btn btn-danger">
-          Xóa mục đã chọn
-        </button>
       </table>
-      <nav aria-label="Page navigation example" id="pagination">
-        <ul className="pagination">
-          <li className="page-item">
-            <button
-              disabled={page.page <= 1}
-              onClick={() => setPage({ ...page, page: page.page - 1 })}
-              className="page-link"
-              href="#"
-              aria-label="Previous"
-            >
-              <span aria-hidden="true">«</span>
-            </button>
-          </li>
-          {menuItemsShow}
-          <li className="page-item">
-            <button
-              disabled={page.page >= totalpage}
-              onClick={() =>
-                setPage({
-                  ...page,
-                  page: page.page + 1,
-                })
-              }
-              className="page-link"
-              href="#"
-              aria-label="Next"
-            >
-              <span aria-hidden="true">»</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
+      <button
+        type="button"
+        onClick={deleteListId}
+        className="btn btn-danger mb-4"
+      >
+        Xóa mục đã chọn
+      </button>
+      <div className="d-flex justify-content-center col-md-12">
+        <nav aria-label="Page navigation example" id="pagination">
+          <ul className="pagination">
+            <li className="page-item">
+              <button
+                disabled={page.page <= 1}
+                onClick={() => setPage({ ...page, page: page.page - 1 })}
+                className="page-link"
+                href="#"
+                aria-label="Previous"
+              >
+                <span aria-hidden="true">«</span>
+              </button>
+            </li>
+            {menuItemsShow}
+            <li className="page-item">
+              <button
+                disabled={page.page >= totalpage}
+                onClick={() =>
+                  setPage({
+                    ...page,
+                    page: page.page + 1,
+                  })
+                }
+                className="page-link"
+                href="#"
+                aria-label="Next"
+              >
+                <span aria-hidden="true">»</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 };

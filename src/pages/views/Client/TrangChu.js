@@ -206,7 +206,7 @@ function TrangChu() {
                     <div className="product-image-wrapper">
                       <div className="single-products">
                         <div className="productinfo text-center">
-                          <div style={{ height: "200px" }}>
+                          <div style={{ height: "180px",marginBottom:'10px' }}>
                             <img src={element.images} alt="" />
                           </div>
                           <span><del>{financial(element.price)}</del></span>

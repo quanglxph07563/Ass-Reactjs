@@ -16,26 +16,26 @@ const AddProduct = () => {
   const onSubmit = (data) => {
     data.images = document.querySelector("#show_images img").src;
     data.detail = detail;
-    document.getElementsByClassName('loi').innerHTML=''
+    document.getElementsByClassName("loi").innerHTML = "";
     http
       .post("products/", data)
       .then(function (response) {
         swal({
-          title: 'Thêm mới thành công',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1500
-        }).then(()=>{
+          title: "Thêm mới thành công",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
           history.push("/admin/products");
         });
       })
       .catch(function (error) {
-        document.getElementById('sale').innerHTML = ''
-        document.getElementById('detail').innerHTML = ''
+        document.getElementById("sale").innerHTML = "";
+        document.getElementById("detail").innerHTML = "";
 
-        var loi= error.response.data.errors
+        var loi = error.response.data.errors;
         for (const property in loi) {
-           document.getElementById(`${property}`).innerHTML = `${loi[property]}`
+          document.getElementById(`${property}`).innerHTML = `${loi[property]}`;
         }
         console.log(error);
       });
@@ -102,10 +102,9 @@ const AddProduct = () => {
                     type="text"
                     ref={register({
                       required: true,
-                      pattern:/^(?=[A-Za-z0-9])([A-Za-z0-9\s]*)(?<=[A-Za-z0-9])$/,
+                      pattern: /^[^\s].*/,
                       minLength: 10,
                       maxLength: 60,
-                     
                     })}
                     className="form-control"
                     name="name_product"
@@ -113,8 +112,8 @@ const AddProduct = () => {
                   <span className="loi">
                     {errors.name_product?.type === "required" &&
                       "Tên sản phẩm không được để trống"}
-                       {errors.name_product?.type === "pattern" &&
-                      "Chỉ được nhập chữ và số"}
+                    {errors.name_product?.type === "pattern" &&
+                      "Không được chưa khoảng cách ở đầu"}
                     {errors.name_product?.type === "minLength" &&
                       "Tên sản phẩm không được nhỏ hơn 10 ký tự"}
                     {errors.name_product?.type === "maxLength" &&
@@ -129,24 +128,26 @@ const AddProduct = () => {
                     className="form-control"
                     id="images"
                     name="images"
-                    ref={register({ required: true ,
+                    ref={register({
+                      required: true,
                       validate: (value) => {
                         let patternImage = /\S{1,}[^\.][\.][p|j][n|p][g|e]g?$/g;
                         let checkImage = patternImage.test(value[0].name);
                         return checkImage;
                       },
-                    })}      
+                    })}
                   />
                   <span className="loi">
-                  {errors.images?.type === "required" &&
-                      "Chọn ảnh sản phẩm"}
-                       {errors.images?.type === "validate" &&
+                    {errors.images?.type === "required" && "Chọn ảnh sản phẩm"}
+                    {errors.images?.type === "validate" &&
                       "Vui lòng upload image .png .jpg, jpeg"}
                   </span>
                   <div id="show_images" className="pt-3">
                     <img style={{ width: "200px" }} src alt="" />
                   </div>
                 </div>
+              </div>
+              <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="exampleInputPassword1">Giá Tiền</label>
                   <input
@@ -162,8 +163,6 @@ const AddProduct = () => {
                       "Giá sản phẩm không được lớn hơn 0 "}
                   </span>
                 </div>
-              </div>
-              <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="exampleInputPassword1">Sale</label>
                   <input
@@ -173,7 +172,7 @@ const AddProduct = () => {
                     name="sale"
                   />
                   {/* {errors.price && <span className="loi">Giá Tiền không được để trống và k được lớn hơn 3</span>} */}
-                  <span className="loi" id='sale'>
+                  <span className="loi" id="sale">
                     {errors.sale?.type === "required" &&
                       "Sale phẩm không dược để trống"}
                     {errors.sale?.type === "min" &&
@@ -195,6 +194,35 @@ const AddProduct = () => {
                       "Số lượng sản phẩm không được lớn hơn 0 "}
                   </span>
                 </div>
+              </div>
+
+              <div className="col-md-12">
+                <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Mô tả ngắn</label>
+                  <textarea
+                  name='short_description'
+                    class="form-control"
+                    id="exampleFormControlTextarea1"
+                    rows="3"
+                    ref={register({
+                      required: true,
+                      pattern: /^[^\s].*/,
+                      minLength: 10,
+                      maxLength: 300,
+                    })}
+                  ></textarea>
+                   <span className="loi">
+                    {errors.short_description?.type === "required" &&
+                      "Mô tả ngắn không được để trống"}
+                    {errors.short_description?.type === "pattern" &&
+                      "Không được chưa khoảng cách ở đầu"}
+                    {errors.short_description?.type === "minLength" &&
+                      "Mô tả ngắn không được nhỏ hơn 10 ký tự"}
+                    {errors.short_description?.type === "maxLength" &&
+                      "Mô tả ngắn không được lớn hơn 300 ký tự"}
+                  </span>
+                </div>
+                <label for="exampleFormControlTextarea1">Chi tiết sản phẩm</label>
                 <CKEditor
                   editor={ClassicEditor}
                   data=""
@@ -204,18 +232,16 @@ const AddProduct = () => {
                     // console.log( { event, editor, data } );
                   }}
                 />
-                 <span className="loi" id='detail'>
-                   
-                  </span>
-              </div>
-              <div className="d-flex justify-content-end">
-                <button
-                  type="submit"
-                  // onClick={() => addSanPham()}
-                  class="btn btn-primary"
-                >
-                  Thêm mới sản phẩm
-                </button>
+                <span className="loi" id="detail"></span>
+                <div className="d-flex justify-content-end mt-3">
+                  <button
+                    type="submit"
+                    // onClick={() => addSanPham()}
+                    class="btn btn-primary"
+                  >
+                    Thêm mới sản phẩm
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -5,13 +5,12 @@ import { useForm } from "react-hook-form";
 import swal from "sweetalert";
 import http from "../../../../api/api.js";
 
-function AddCategory() {
+function AddDanhMucBaiViet() {
   let history = useHistory();
 const { register, handleSubmit, watch, errors } = useForm();
   const onSubmit = (data) => {
-    data.images = document.querySelector("#show_images img").src;
     http
-      .post("category/", data)
+      .post("article-category/", data)
       .then(function (response) {
         swal({
           title: 'Thêm mới thành công',
@@ -19,25 +18,12 @@ const { register, handleSubmit, watch, errors } = useForm();
             showConfirmButton: false,
             timer: 1500
         }).then(()=>{
-        history.push("/admin/category");
+        history.push("/admin/danh-muc-bai-viet");
         })
       })
       .catch(function (error) {
         document.getElementById('trung_ten').innerHTML = error.response.data.errors.name_category
       });
-  };
-  const loadImageFileAsURL = (e) => {
-    var file = e.target;
-    var filesSelected = file.files;
-    if (filesSelected.length > 0) {
-      var fileToLoad = filesSelected[0];
-      var fileReader = new FileReader();
-      fileReader.onload = function (fileLoadedEvent) {
-        var srcData = fileLoadedEvent.target.result; // <--- data: base64
-        document.querySelector("#show_images img").src = srcData;
-      };
-      fileReader.readAsDataURL(fileToLoad);
-    }
   };
     return (
         <form method="POST" onSubmit={handleSubmit(onSubmit)}>
@@ -57,7 +43,7 @@ const { register, handleSubmit, watch, errors } = useForm();
                       type="text"
                       ref={register({
                         required: true,
-                        minLength: 2,
+                        minLength: 5,
                         pattern:/^[^\s].*/,
                         maxLength: 60,
                       })}
@@ -70,50 +56,12 @@ const { register, handleSubmit, watch, errors } = useForm();
                           {errors.name_category?.type === "pattern" &&
                       "Không được chưa khoảng cách ở đầu"}
                       {errors.name_category?.type === "minLength" &&
-                        "Tên danh mục không được nhỏ hơn 2 ký tự"}
+                        "Tên danh mục không được nhỏ hơn 5 ký tự"}
                       {errors.name_category?.type === "maxLength" &&
                         "Tên danh mục không được lớn hơn 60 ký tự"}
                     </span>
-                  </div>
-                  <div className="form-group">
-                  <label htmlFor="exampleInputPassword1"> Ảnh danh mục</label>
-                  <input
-                    type="file"
-                    onChange={loadImageFileAsURL}
-                    className="form-control"
-                    id="images"
-                    name="images"
-                    ref={register({ required: true })}
-                  />
-                  <span className="loi" >
-                    {errors.images?.type === "required" && "Chọn ảnh danh mục"}
-                  </span>
-                  <div id="show_images" className='pt-3'>
-                    <img style={{width: '200px'}} src alt="" />
-                  </div>
-                </div>
-                </div>
-                <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
-                    Mô tả danh mục
-                  </label>
-                  <textarea
-                    className="form-control"
-                    name="description"
-                    rows={5}
-                    defaultValue={""}
-                    ref={register({ required: true })}
-                  />
-                  {errors.description && (
-                    <span className="loi">
-                      {" "}
-                      Mô tả danh mục không được để trống
-                    </span>
-                  )}
-                </div>
-                </div>
-                <div className="d-flex justify-content-end">
+                  </div>  
+                  <div className="d-flex justify-content-end">
                   <button
                     type="submit"
                     // onClick={() => addSanPham()}
@@ -121,7 +69,9 @@ const { register, handleSubmit, watch, errors } = useForm();
                   >
                     Thêm mới danh mục
                   </button>
+                </div>             
                 </div>
+              
               </div>
             </div>
           </div>
@@ -130,4 +80,4 @@ const { register, handleSubmit, watch, errors } = useForm();
     )
 }
 
-export default AddCategory
+export default AddDanhMucBaiViet

@@ -3,17 +3,13 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import http from "../../../../api/api.js";
-function DonHang() {
+function DonHangPheDuyet() {
   const [items, setItems] = useState([]);
   const setList = () => {
     http
-      .get("donhang")
+      .get("donhang-da-phe-duyet")
       .then(function (response) {
         setItems(response.data);
-        // console.log(response.data.last_page);
-        // setTotalpage(response.data.last_page);
-        // pagination(response.data.last_page);
-        // console.log(response)
       })
       .catch(function (error) {
         // console.log(error);
@@ -26,32 +22,6 @@ function DonHang() {
       currency: "VND",
     }).format(price);
   }
-  const pheDuyet = (id) => {
-    swal({
-      title: "Bạn chắc chắn phê duyệt đơn hàng này ?",
-      // text: "Once deleted, you will not be able to recover this imaginary file!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((result) => {
-      if (result) {
-        http
-          .get("chang-status-don-hang/" + id)
-          .then(function (response) {
-            setList();
-            swal({
-              title: "Đơn hàng đã được phê duyệt!",
-              text: "You clicked the button!",
-              icon: "success",
-              button: "Đóng!",
-            });
-          })
-          .catch(function (error) {
-            // console.log(error);
-          });
-      }
-    });
-  };
   return (
     <div className="table">
       <table className="table">
@@ -66,7 +36,6 @@ function DonHang() {
             <th scope="col">Địa chỉ </th>
             <th scope="col">Email</th>
             <th scope="col">Tổng tiền</th>
-            <th scope="col">Chức năng</th>
             <th scope="col">Chi tiết</th>
           </tr>
         </thead>
@@ -79,18 +48,6 @@ function DonHang() {
               <td>{item.address}</td>
               <td>{item.email}</td>
               <td>{financial(item.total_price)}</td>
-              <td>
-              <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={() => {
-                    pheDuyet(item.id);
-                  }}
-                >
-              
-                  Chốt đơn
-                </button>
-              </td>
               <td>
                 <button
                   data-toggle="modal"
@@ -209,4 +166,4 @@ function DonHang() {
   );
 }
 
-export default DonHang;
+export default DonHangPheDuyet;

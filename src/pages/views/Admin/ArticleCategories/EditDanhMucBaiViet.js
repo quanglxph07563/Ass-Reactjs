@@ -3,25 +3,21 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import http from "../../../../api/api.js";
-
 import { useParams } from "react-router-dom";
 import swal from "sweetalert";
 
-function EditCategory() {
+function EditDanhMucBaiViet() {
     let history = useHistory();
     const { register, handleSubmit, watch, errors } = useForm();
     let { id } = useParams();
     const [detail, setDeatil] = useState({});
     const [category, setCategory] = useState([]);
-    let categoryDetail = 0
     const setList =  () => {
         http
-        .get("category/" + id)
+        .get("article-category/" + id)
         .then(function (response) {
           // console.log(response.data)
-          setDeatil(response.data.data);
-          console.log( response.data.data.idCategory)
-          categoryDetail = response.data.data.idCategory
+          setDeatil(response.data);
         })
         .catch(function (error) {
           console.log(error);
@@ -29,10 +25,9 @@ function EditCategory() {
     };
     useEffect(setList, []);
     const capNhatDanhMuc = (data) => {
-      data.images = document.querySelector("#show_images img").src;
       data.id_danhmuc = id
       http
-        .put("category/" + id, data)
+        .put("article-category/" + id, data)
         .then(function (response) {
           swal({
             title: 'Cập nhật thành công',
@@ -40,7 +35,7 @@ function EditCategory() {
               showConfirmButton: false,
               timer: 1500
           }).then(()=>{
-          history.push("/admin/category");
+          history.push("/admin/danh-muc-bai-viet");
           })
         })
         .catch(function (error) {
@@ -55,20 +50,6 @@ function EditCategory() {
         ...detail,
         [name]: value,
       });
-    };
-  
-    const loadImageFileAsURL = (e) => {
-      var file = e.target;
-      var filesSelected = file.files;
-      if (filesSelected.length > 0) {
-        var fileToLoad = filesSelected[0];
-        var fileReader = new FileReader();
-        fileReader.onload = function (fileLoadedEvent) {
-          var srcData = fileLoadedEvent.target.result; // <--- data: base64
-          document.querySelector("#show_images img").src = srcData;
-        };
-        fileReader.readAsDataURL(fileToLoad);
-      }
     };
     return (
         <form method="POST" onSubmit={handleSubmit(capNhatDanhMuc)}>
@@ -89,7 +70,7 @@ function EditCategory() {
                       ref={register({
                         required: true,
                         pattern:/^[^\s].*/,
-                        minLength: 2,
+                        minLength: 5,
                         maxLength: 60,
                       })}
                       onChange={onHandleChange}
@@ -103,48 +84,12 @@ function EditCategory() {
                           {errors.name_category?.type === "pattern" &&
                       "Không được chưa khoảng cách ở đầu"}
                       {errors.name_category?.type === "minLength" &&
-                        "Tên danh mục không được nhỏ hơn 2 ký tự"}
+                        "Tên danh mục không được nhỏ hơn 5 ký tự"}
                       {errors.name_category?.type === "maxLength" &&
                         "Tên danh mục không được lớn hơn 60 ký tự"}
                     </span>
                   </div>
-                  <div className="form-group">
-                  <label htmlFor="exampleInputPassword1"> Ảnh danh mục</label>
-                  <input
-                    type="file"
-                    onChange={loadImageFileAsURL}
-                    className="form-control"
-                    id="images"
-                    name="images"
-                  />
-                  <div id="show_images" className='pt-3'>
-                    <img style={{width: '200px'}} src ={detail.images} alt="" />
-                  </div>
-                </div>
-                </div>
-                <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
-                    Mô tả danh mục
-                  </label>
-                  <textarea
-                    className="form-control"
-                    name="description"
-                    value={detail.description}
-                    rows={5}
-                    defaultValue={""}
-                    onChange={onHandleChange}
-                    ref={register({ required: true })}
-                  />
-                  {errors.description && (
-                    <span className="loi">
-                      {" "}
-                      Mô tả danh mục không được để trống
-                    </span>
-                  )}
-                </div>
-                </div>
-                <div className="d-flex justify-content-end">
+                  <div className="d-flex justify-content-end">
                   <button
                     type="submit"
                     // onClick={() => addSanPham()}
@@ -153,6 +98,8 @@ function EditCategory() {
                    Cập nhật danh mục
                   </button>
                 </div>
+                </div>
+               
               </div>
             </div>
           </div>
@@ -161,4 +108,4 @@ function EditCategory() {
     )
 }
 
-export default EditCategory
+export default EditDanhMucBaiViet

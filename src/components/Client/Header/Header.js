@@ -48,7 +48,7 @@ function Header({ infoUser }) {
         </a>
       </li>
       <li>
-      <Link to="admin/dashboard">
+      <Link to="/admin/dashboard">
           <i className="fa fa-user" /> Quản trị
         </Link>
       </li>
@@ -58,12 +58,12 @@ function Header({ infoUser }) {
   const userNotLogin = (
     <ul>
       <li>
-      <Link to="signup">
+      <Link to="/signup">
           <i className="fa fa-user" /> Signup
         </Link>
       </li>
       <li>
-        <Link to="login">
+        <Link to="/login">
           <i className="fa fa-user" /> Login
         </Link>
       </li>
@@ -113,11 +113,11 @@ function Header({ infoUser }) {
         <div className="container">
           <div className="row">
             <div className="col-sm-6">
-              <div className="logo">
+              <div className="logo" >
                 <h1>
-                  <a href="./">
+                  <Link to="/">
                     <img src={imagePath} />
-                  </a>
+                  </Link>
                 </h1>
               </div>
             </div>

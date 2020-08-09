@@ -131,7 +131,7 @@ const EditProduct = () => {
                     className="form-control"
                     ref={register({
                       required: true,
-                      pattern:/^(?=[A-Za-z0-9])([A-Za-z0-9\s]*)(?<=[A-Za-z0-9])$/,
+                      pattern:/^[^\s].*/,
                       minLength: 10,
                       maxLength: 60,
                     })}
@@ -141,8 +141,8 @@ const EditProduct = () => {
                   <span className="loi">
                     {errors.name_product?.type === "required" &&
                       "Tên sản phẩm không được để trống"}
-                       {errors.name_product?.type === "pattern" &&
-                      "Chỉ được nhập chữ và số"}
+                      {errors.name_product?.type === "pattern" &&
+                      "Không được chưa khoảng cách ở đầu"}
                     {errors.name_product?.type === "minLength" &&
                       "Tên sản phẩm không được nhỏ hơn 10 ký tự"}
                     {errors.name_product?.type === "maxLength" &&
@@ -166,7 +166,10 @@ const EditProduct = () => {
                     <img style={{ width: "200px" }}  src={detail.images} alt="" />
                   </div>
                 </div>
-                <div className="form-group">
+              
+              </div>
+              <div className="col-md-6">
+              <div className="form-group">
                   <label htmlFor="exampleInputPassword1">Giá Tiền</label>
                   <input
                     type="number"
@@ -183,8 +186,6 @@ const EditProduct = () => {
                       "Giá sản phẩm không được lớn hơn 0 "}
                   </span>
                 </div>
-              </div>
-              <div className="col-md-6">
               <div className="form-group">
                   <label htmlFor="exampleInputPassword1">Sale</label>
                   <input
@@ -220,7 +221,37 @@ const EditProduct = () => {
                       "Số lượng sản phẩm không được lớn hơn 0 "}
                   </span>
                 </div>
-                <CKEditor
+              
+              </div>
+              <div className = 'col-md-12'>
+              <div class="form-group">
+                  <label for="exampleFormControlTextarea1">Mô tả ngắn</label>
+                  <textarea
+                  name='short_description'
+                value= {detail.short_description}
+                    class="form-control"
+                    id="exampleFormControlTextarea1"
+                    onChange={onHandleChange}
+                    rows="3"
+                    ref={register({
+                      required: true,
+                      pattern: /^[^\s].*/,
+                      minLength: 10,
+                      maxLength: 300,
+                    })}
+                  ></textarea>
+                   <span className="loi">
+                    {errors.short_description?.type === "required" &&
+                      "Mô tả ngắn không được để trống"}
+                    {errors.short_description?.type === "pattern" &&
+                      "Không được chưa khoảng cách ở đầu"}
+                    {errors.short_description?.type === "minLength" &&
+                      "Mô tả ngắn không được nhỏ hơn 10 ký tự"}
+                    {errors.short_description?.type === "maxLength" &&
+                      "Mô tả ngắn không được lớn hơn 300 ký tự"}
+                  </span>
+                </div>
+              <CKEditor
                   editor={ClassicEditor}
                   data={detail.detail}
                   onChange={(event, editor) => {
@@ -231,12 +262,13 @@ const EditProduct = () => {
                    <span className="loi" id='detail'>
                    
                    </span>
-              </div>
-              <div className="d-flex justify-content-end">
+                   <div className="d-flex justify-content-end mt-3">
                 <button type="submit" class="btn btn-primary">
                   Cập nhật sản phẩm
                 </button>
               </div>
+              </div>
+          
             </div>
           </div>
         </div>
