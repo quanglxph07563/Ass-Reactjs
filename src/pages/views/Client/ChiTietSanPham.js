@@ -200,8 +200,8 @@ function ChiTietSanPham() {
                   <div className="ts-wg-meta">
                 <Link to={'/chi-tiet-san-pham/'+item.id} title="Áo thun nữ Belike">{item.name_product}</Link>
                     <span className="price">
-                      <span className="amount"> <del style={{fontSize: '13px', color: 'gray'}}>200.000₫</del></span> <br/>
-                      <ins><span className="amount" style={{fontSize: '18px',color: '#d0011b'}}>95.200₫</span></ins>
+                <span className="amount"> <del style={{fontSize: '13px', color: 'gray'}}>{financial(item.price)}</del></span> <br/>
+                <ins><span className="amount" style={{fontSize: '18px',color: '#d0011b'}}>{financial(item.sale)}</span></ins>
                     </span>
                   </div>
                 </li>

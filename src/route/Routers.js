@@ -30,6 +30,7 @@ import PhanHoi from "../pages/views/Admin/PhanHoi/PhanHoi";
 import BaiViet from "../pages/views/Client/BaiViet";
 import ChiTietBaiViet from "../pages/views/Client/ChiTietBaiViet";
 import DonHangPheDuyet from "../pages/views/Admin/DonHang/DonHangPheDuyet";
+import GioiThieu from "../pages/views/Client/GioiThieu";
 
 const Routers = () => {
   return (
@@ -137,6 +138,10 @@ const Routers = () => {
               </Route>
               <Route path="/chi-tiet-bai-viet/:id" exact>
                 <ChiTietBaiViet />
+              </Route>
+
+              <Route path="/gioi-thieu" exact>
+                <GioiThieu />
               </Route>
               
             </LayoutClinet>

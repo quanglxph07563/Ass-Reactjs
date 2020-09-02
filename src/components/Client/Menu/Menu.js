@@ -7,17 +7,20 @@ function Menu() {
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item active">
+            <li className="nav-item active  mr-3">
               <Link className="nav-link" to="/">Trang chủ <span className="sr-only">(current)</span></Link>
             </li>
-            <li className="nav-item">
+            <li className="nav-item mr-3">
             <Link className="nav-link" to="/cua-hang">Cửa hàng <span className="sr-only">(current)</span></Link> 
             </li>
-            <li className="nav-item">
+            <li className="nav-item mr-3">
             <Link className="nav-link" to="/lien-he">Liên hệ <span className="sr-only">(current)</span></Link> 
             </li>
-            <li className="nav-item">
+            <li className="nav-item mr-3">
             <Link className="nav-link" to="/bai-viet">Bài viết<span className="sr-only">(current)</span></Link> 
+            </li>
+            <li className="nav-item">
+            <Link className="nav-link" to="/gioi-thieu">Về chúng tôi<span className="sr-only">(current)</span></Link> 
             </li>
           </ul>
         </div>
